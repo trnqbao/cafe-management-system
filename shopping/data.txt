@@ -1,0 +1,11 @@
+INSERT INTO products (id, name, price, image) VALUES 
+("1","Magic Mouse",199,"./upload/img1.png"),
+("2","Apple TV",499,"./upload/img2.png"),
+("3","Apple Charger",79,"./upload/img3.png"),
+("4","Apple Pencil",199,"./upload/img4.png"),
+("5","Iphone 12 Pro Max",799,"./upload/img5.png"),
+("6","Macbook Pro",899,"./upload/img6.png"),
+("7","Air Pod Pro",299,"./upload/img7.png"),
+("8","Apple Watch 7",399,"./upload/img8.png"),
+("9","Apple iMac",2499,"./upload/img9.png")
+
