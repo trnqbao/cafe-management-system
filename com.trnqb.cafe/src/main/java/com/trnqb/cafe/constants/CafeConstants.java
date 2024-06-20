@@ -1,4 +1,4 @@
-package com.trnqb.cafe.constents;
+package com.trnqb.cafe.constants;
 
 public class CafeConstants {
     public static final String ST_WENT_WRONG = "Something went wrong.";
