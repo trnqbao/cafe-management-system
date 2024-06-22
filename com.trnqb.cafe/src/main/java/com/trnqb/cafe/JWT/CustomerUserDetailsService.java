@@ -1,6 +1,7 @@
 package com.trnqb.cafe.JWT;
 
 import com.trnqb.cafe.dao.UserDao;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
