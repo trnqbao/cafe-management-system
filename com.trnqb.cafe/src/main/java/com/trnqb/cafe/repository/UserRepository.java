@@ -1,16 +1,21 @@
-package com.trnqb.cafe.dao;
+package com.trnqb.cafe.repository;
 
-import com.trnqb.cafe.POJO.User;
+import com.trnqb.cafe.entities.Role;
+import com.trnqb.cafe.entities.User;
 import com.trnqb.cafe.wrapper.UserWrapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface UserDao extends JpaRepository<User, Integer> {
-    User findByEmailId(@Param("email") String email);
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    User findByEmail(@Param("email") String email);
+
+    User findByRole(Role role);
 
     List<UserWrapper> getAllUser();
 
