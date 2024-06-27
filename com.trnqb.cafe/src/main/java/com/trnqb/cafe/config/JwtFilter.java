@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String jwt;
         final String email;
 
-        if (authHeader == null || !org.apache.commons.lang3.StringUtils.startsWith(authHeader, "Bear ")) {
+        if (authHeader == null || !org.apache.commons.lang3.StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -69,6 +69,6 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     public boolean isUser() {
-        return "user".equalsIgnoreCase((String) claims.get("role"));
+        return "USER".equalsIgnoreCase((String) claims.get("role"));
     }
 }

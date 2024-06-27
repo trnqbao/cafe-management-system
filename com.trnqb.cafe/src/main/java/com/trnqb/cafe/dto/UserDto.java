@@ -1,5 +1,6 @@
-package com.trnqb.cafe.wrapper;
+package com.trnqb.cafe.dto;
 
+import com.trnqb.cafe.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserWrapper {
+public class UserDto {
     private Integer id;
     private String name;
-    private String email;
     private String phoneNumber;
-    private String state;
-
+    private String email;
+    private String status;
+    private Role role;
 }

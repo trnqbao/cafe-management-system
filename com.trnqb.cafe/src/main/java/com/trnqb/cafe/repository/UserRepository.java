@@ -2,7 +2,6 @@ package com.trnqb.cafe.repository;
 
 import com.trnqb.cafe.entities.Role;
 import com.trnqb.cafe.entities.User;
-import com.trnqb.cafe.wrapper.UserWrapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
@@ -17,11 +16,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findByRole(Role role);
 
-    List<UserWrapper> getAllUser();
+    List<User> findAllByRole(Role role);
 
     List<String> getAllAdmin();
+
+    Role findRoleByEmail(String email);
 
     @Transactional
     @Modifying
     Integer updateStatus(@Param("status") String status, @Param("id") Integer id);
 }
+

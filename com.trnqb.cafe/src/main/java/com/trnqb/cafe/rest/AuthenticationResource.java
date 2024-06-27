@@ -1,11 +1,10 @@
-package com.trnqb.cafe.controller;
+package com.trnqb.cafe.rest;
 
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.JwtAuthenticationResponse;
 import com.trnqb.cafe.dto.RefreshTokenRequest;
 import com.trnqb.cafe.dto.SignInRequest;
 import com.trnqb.cafe.dto.SignUpRequest;
-import com.trnqb.cafe.entities.User;
 import com.trnqb.cafe.service.AuthenticationService;
 import com.trnqb.cafe.utils.CafeUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class AuthenticationResource {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")

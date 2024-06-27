@@ -30,6 +30,15 @@ public class EmailUtils {
         mailSender.send(message);
     }
 
+    public void sendSimpleMessage(String toEmail, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+
     private String[] getCcArray(List<String> list) {
         String[] cc = new String[list.size()];
         for(int i = 0; i < list.size(); i++) {

@@ -30,9 +30,7 @@ public class SecurityConfig {
             throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/refresh").permitAll()
+                        .requestMatchers("/signup", "/login").permitAll()
                         .requestMatchers("/admin").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/user").hasAnyAuthority(Role.USER.name())
                         .anyRequest().authenticated())
