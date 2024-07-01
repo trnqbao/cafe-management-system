@@ -1,4 +1,4 @@
-package com.trnqb.cafe.config;
+package com.trnqb.cafe.jwt;
 
 import com.trnqb.cafe.service.JWTService;
 import com.trnqb.cafe.service.UserService;
@@ -25,10 +25,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
 
-    private final UserService userService;
+//    private final UserService userService;
+    private final CustomerUserDetailsService customerUserDetailsService;
 
     Claims claims = null;
-
+    private String email = null;
 
     @Override
     protected void doFilterInternal(
@@ -37,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String email;
+//        final String email;
 
         if (authHeader == null || !org.apache.commons.lang3.StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
@@ -46,9 +47,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
         email = jwtService.extractUsername(jwt);
+        claims = jwtService.extractAllClaims(jwt);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(email);
+            UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
@@ -70,5 +72,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     public boolean isUser() {
         return "USER".equalsIgnoreCase((String) claims.get("role"));
+    }
+
+    public String getCurrentUser() {
+        return email;
     }
 }

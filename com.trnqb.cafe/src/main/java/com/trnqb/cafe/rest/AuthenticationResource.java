@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
@@ -29,8 +31,13 @@ public class AuthenticationResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthenticationResponse> login(@RequestBody SignInRequest signInRequest) {
-        return ResponseEntity.ok(authenticationService.login(signInRequest));
+    public ResponseEntity<String> login(@RequestBody SignInRequest signInRequest) {
+        try {
+            return authenticationService.login(signInRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/refresh")
@@ -41,5 +48,25 @@ public class AuthenticationResource {
     @GetMapping("/")
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok(authenticationService.hello());
+    }
+
+    @GetMapping("/checkToken")
+    public ResponseEntity<String> checkToken() {
+        try {
+            authenticationService.checkToken();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> requestMap) {
+        try {
+            return authenticationService.changePassword(requestMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

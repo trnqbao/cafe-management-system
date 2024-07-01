@@ -12,7 +12,7 @@ import java.util.Map;
 
 
 public interface UserService {
-    UserDetailsService userDetailsService();
+//    UserDetailsService userDetailsService();
 
     ResponseEntity<String> signUp(Map<String, String> requestMap);
 
@@ -21,6 +21,8 @@ public interface UserService {
     ResponseEntity<List<UserDto>> getAllUser();
 
     ResponseEntity<String> update(Map<String, String> requestMap);
+
+//    User getUserDetails();
 
 
 }

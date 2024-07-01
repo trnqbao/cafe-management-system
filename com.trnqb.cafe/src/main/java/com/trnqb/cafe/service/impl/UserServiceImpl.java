@@ -10,6 +10,7 @@ import com.trnqb.cafe.service.UserService;
 
 import com.trnqb.cafe.utils.CafeUtils;
 import com.trnqb.cafe.utils.EmailUtils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,27 +19,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final EmailUtils emailUtils;
+//    @Getter
+//    private com.trnqb.cafe.entities.User userDetails;
 
-    @Override
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-            @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByEmail(username);
-
-            }
-        };
-    }
+//    @Override
+//    public UserDetailsService userDetailsService() {
+//        return username -> {
+//            userDetails = userRepository.findByEmail(username);
+//            if (!Objects.isNull(userDetails)) {
+//                return new org.springframework.security.core.userdetails.User(userDetails.getEmail(), userDetails.getPassword(), new ArrayList<>());
+//            } else {
+//                throw new UsernameNotFoundException("User not found.");
+//            }
+//        };
+//    }
 
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {

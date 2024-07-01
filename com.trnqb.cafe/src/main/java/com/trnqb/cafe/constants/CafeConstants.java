@@ -8,4 +8,6 @@ public class CafeConstants {
     public static final String UNAUTHORIZED_ACCESS = "Unauthorized access.";
     public static final String NOT_EXISTED_USER = "User ID does not exist.";
     public static final String UPDATED_STATUS = "User status updated successfully.";
+    public static final String INCORRECT_OLD_PASSWORD = "Incorrect old password.";
+    public static final String UPDATED_PWD = "Password updated successfully.";
 }

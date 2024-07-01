@@ -31,6 +31,5 @@ public class UserResource {
             e.printStackTrace();
         }
         return new ResponseEntity<List<UserDto>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
-
     }
 }

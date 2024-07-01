@@ -1,6 +1,7 @@
 package com.trnqb.cafe.config;
 
-import com.trnqb.cafe.entities.Role;
+import com.trnqb.cafe.jwt.CustomerUserDetailsService;
+import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,15 +25,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final UserService userService;
+    private final CustomerUserDetailsService customerUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/signup", "/login").permitAll()
-                        .requestMatchers("/admin").hasAnyAuthority(Role.ADMIN.name())
-                        .requestMatchers("/user").hasAnyAuthority(Role.USER.name())
+                        .requestMatchers("/signup", "/login", "/forgotPassword").permitAll()
                         .anyRequest().authenticated())
 
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userService.userDetailsService());
+        authenticationProvider.setUserDetailsService(customerUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
