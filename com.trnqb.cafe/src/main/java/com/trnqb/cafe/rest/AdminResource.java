@@ -29,4 +29,6 @@ public class AdminResource {
         }
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 }

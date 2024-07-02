@@ -69,4 +69,14 @@ public class AuthenticationResource {
         }
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try {
+            return authenticationService.forgotPassword(requestMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

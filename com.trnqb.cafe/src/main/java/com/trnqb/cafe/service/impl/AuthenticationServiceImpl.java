@@ -1,5 +1,6 @@
 package com.trnqb.cafe.service.impl;
 
+import com.google.common.base.Strings;
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.JwtAuthenticationResponse;
 import com.trnqb.cafe.dto.RefreshTokenRequest;
@@ -13,8 +14,11 @@ import com.trnqb.cafe.repository.UserRepository;
 import com.trnqb.cafe.service.AuthenticationService;
 import com.trnqb.cafe.service.JWTService;
 import com.trnqb.cafe.utils.CafeUtils;
+
+import com.trnqb.cafe.utils.EmailUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final JwtFilter jwtFilter;
+    private final EmailUtils emailUtils;
     private final CustomerUserDetailsService customerUserDetailsService;
 
 
@@ -137,13 +142,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         try {
             User user = userRepository.findByEmail(jwtFilter.getCurrentUser());
             if (user != null) {
-                System.out.println("Old Password: " + passwordEncoder.encode(requestMap.get("oldPassword")));
-                if (passwordEncoder.matches(requestMap.get("oldPassword"), user.getPassword())) {
-                    user.setPassword(passwordEncoder.encode(requestMap.get("newPassword")));
+                String oldPwd = requestMap.get("oldPassword");
+                String newPwd = requestMap.get("newPassword");
+                if (passwordEncoder.matches(oldPwd, user.getPassword())) {
+                    user.setPassword(passwordEncoder.encode(newPwd));
                     userRepository.save(user);
                     return CafeUtils.getResponseEntity(CafeConstants.UPDATED_PWD, HttpStatus.OK);
                 }
                 return CafeUtils.getResponseEntity(CafeConstants.INCORRECT_OLD_PASSWORD, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try {
+            User user = userRepository.findByEmail(requestMap.get("email"));
+            if (!Objects.isNull(user) && Strings.isNullOrEmpty(user.getEmail())) {
+                emailUtils.forgotMail(user.getEmail(), "Credentials by Cafe Management System", user.getName());
+                return CafeUtils.getResponseEntity("Check your mail for Credentials", HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
