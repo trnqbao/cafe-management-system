@@ -1,11 +1,8 @@
 package com.trnqb.cafe.service;
 
 
-import com.trnqb.cafe.dto.UserDto;
-import com.trnqb.cafe.entities.Role;
-import com.trnqb.cafe.entities.User;
+import com.trnqb.cafe.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +15,7 @@ public interface UserService {
 
     ResponseEntity<String> login(Map<String, String> requestMap);
 
-    ResponseEntity<List<UserDto>> getAllUser();
+    ResponseEntity<List<UserDTO>> getAllUser();
 
     ResponseEntity<String> update(Map<String, String> requestMap);
 

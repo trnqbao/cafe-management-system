@@ -2,7 +2,7 @@ package com.trnqb.cafe.service.impl;
 
 
 import com.trnqb.cafe.constants.CafeConstants;
-import com.trnqb.cafe.dto.UserDto;
+import com.trnqb.cafe.dto.UserDTO;
 import com.trnqb.cafe.entities.Role;
 import com.trnqb.cafe.entities.User;
 import com.trnqb.cafe.repository.UserRepository;
@@ -10,13 +10,9 @@ import com.trnqb.cafe.service.UserService;
 
 import com.trnqb.cafe.utils.CafeUtils;
 import com.trnqb.cafe.utils.EmailUtils;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -52,10 +48,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<List<UserDto>> getAllUser() {
+    public ResponseEntity<List<UserDTO>> getAllUser() {
         try {
             return new ResponseEntity<>(userRepository.findAllByRole(Role.USER)
-                    .stream().map(user -> mapToDTO(user, new UserDto()))
+                    .stream().map(user -> mapToDTO(user, new UserDTO()))
                     .toList(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +80,7 @@ public class UserServiceImpl implements UserService {
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private UserDto mapToDTO(final User user, final UserDto userDto) {
+    private UserDTO mapToDTO(final User user, final UserDTO userDto) {
         userDto.setId(user.getId());
         userDto.setEmail(user.getEmail());
         userDto.setPhoneNumber(user.getPhoneNumber());

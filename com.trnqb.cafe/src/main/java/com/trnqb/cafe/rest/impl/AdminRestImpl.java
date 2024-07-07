@@ -1,6 +1,7 @@
-package com.trnqb.cafe.rest;
+package com.trnqb.cafe.rest.impl;
 
 import com.trnqb.cafe.constants.CafeConstants;
+import com.trnqb.cafe.rest.AdminRest;
 import com.trnqb.cafe.service.UserService;
 import com.trnqb.cafe.utils.CafeUtils;
 import lombok.RequiredArgsConstructor;
@@ -11,17 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin")
 @RequiredArgsConstructor
-public class AdminResource {
+public class AdminRestImpl implements AdminRest {
     private final UserService userService;
-    @GetMapping
+
+    @Override
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hi Admin");
     }
 
-    @PostMapping("/updateStatus")
-    public ResponseEntity<String> update(@RequestBody(required = true) Map<String, String> requestMap) {
+    @Override
+    public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
         try {
             return userService.update(requestMap);
         } catch (Exception e) {
@@ -29,6 +30,4 @@ public class AdminResource {
         }
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
 }

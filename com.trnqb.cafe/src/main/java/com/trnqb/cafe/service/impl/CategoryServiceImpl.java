@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             if (jwtFilter.isAdmin()) {
                 if (validateCategoryMap(requestMap, true)) {
-                    Optional optional = categoryRepository.findById(Integer.parseInt(requestMap.get("id")));
+                    Optional<Category> optional = categoryRepository.findById(Integer.parseInt(requestMap.get("id")));
                     if (optional.isPresent()) {
                         categoryRepository.save(getCategoryFromMap(requestMap, true));
                         return CafeUtils.getResponseEntity("Category updated successfully", HttpStatus.OK);
