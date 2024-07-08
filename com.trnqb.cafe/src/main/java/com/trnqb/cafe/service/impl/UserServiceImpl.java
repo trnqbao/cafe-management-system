@@ -5,6 +5,7 @@ import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.UserDTO;
 import com.trnqb.cafe.entities.Role;
 import com.trnqb.cafe.entities.User;
+import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.UserRepository;
 import com.trnqb.cafe.service.UserService;
 
@@ -22,6 +23,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final EmailUtils emailUtils;
+    private final JwtFilter jwtFilter;
 //    @Getter
 //    private com.trnqb.cafe.entities.User userDetails;
 
@@ -65,13 +67,17 @@ public class UserServiceImpl implements UserService {
         try {
             System.out.println("ID: " + String.valueOf(requestMap.get("id")));
             //todo: check role
-            Optional<User> optional = userRepository.findById(Integer.parseInt(requestMap.get("id")));
-            if (optional.isPresent()) {
-                userRepository.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
-                sendMailtoUser(requestMap.get("status"), optional.get().getEmail());
-                return CafeUtils.getResponseEntity(CafeConstants.UPDATED_STATUS, HttpStatus.OK);
+            if (jwtFilter.isAdmin()) {
+                Optional<User> optional = userRepository.findById(Integer.parseInt(requestMap.get("id")));
+                if (optional.isPresent()) {
+                    userRepository.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    sendMailtoUser(requestMap.get("status"), optional.get().getEmail());
+                    return CafeUtils.getResponseEntity(CafeConstants.UPDATED_STATUS, HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity(CafeConstants.NOT_EXISTED_USER, HttpStatus.OK);
+                }
             } else {
-                return CafeUtils.getResponseEntity(CafeConstants.NOT_EXISTED_USER, HttpStatus.OK);
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
             }
 
         } catch (Exception e) {

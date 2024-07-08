@@ -11,8 +11,10 @@ import com.trnqb.cafe.repository.ProductRepository;
 import com.trnqb.cafe.service.ProductService;
 import com.trnqb.cafe.utils.CafeUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
                         Product product = getProductFromMap(requestMap, true);
                         product.setStatus(optional.get().getStatus());
                         productRepository.save(product);
-                        return CafeUtils.getResponseEntity("Product has been updated", HttpStatus.OK);
+                        return CafeUtils.getResponseEntity("Product has been updated.", HttpStatus.OK);
                     } else {
                         return CafeUtils.getResponseEntity("Product Id does not exist.", HttpStatus.OK);
                     }
@@ -82,6 +84,71 @@ public class ProductServiceImpl implements ProductService {
         }
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<String> deleteProduct(Integer id) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                Optional<Product> optional = productRepository.findById(id);
+                if (optional.isPresent()) {
+                    productRepository.deleteById(id);
+                    return CafeUtils.getResponseEntity("Product has been deleted.", HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity("Product Id does not exist.", HttpStatus.OK);
+                }
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                Optional<Product> optional = productRepository.findById(Integer.parseInt(requestMap.get("id")));
+                if (optional.isPresent()) {
+                    productRepository.updateProductStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    return CafeUtils.getResponseEntity("Product Status has been updated.", HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity("Product Id does not exist.", HttpStatus.OK);
+                }
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(Integer id) {
+        try {
+            return new ResponseEntity<>(productRepository.findAllByCategoryIdAndStatus(id, "true")
+                    .stream().map(product -> mapToDTO(product, new ProductDTO()))
+                    .toList(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<ProductDTO> getProductById(Integer id) {
+        try {
+            return new ResponseEntity<>(productRepository
+                    .findById(id).map(product -> mapToDTO(product, new ProductDTO()))
+                    .orElseThrow(() -> new RuntimeException("Product not found with ID")), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ProductDTO(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
     private ProductDTO mapToDTO(Product product, ProductDTO productDTO) {
         productDTO.setId(product.getId());
