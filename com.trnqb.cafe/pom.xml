@@ -80,19 +80,19 @@
 			<scope>test</scope>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.itextpdf</groupId>-->
-<!--			<artifactId>itextpdf</artifactId>-->
-<!--			<version>5.5.13.3</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.13.3</version>
+		</dependency>
 
 
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.apache.pdfbox</groupId>-->
-<!--			<artifactId>pdfbox</artifactId>-->
-<!--			<version>3.0.1</version>-->
-<!--		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>3.0.1</version>
+		</dependency>
 
 
 		<dependency>
@@ -119,18 +119,18 @@
 			<version>3.0.0</version>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.google.code.gson</groupId>-->
-<!--			<artifactId>gson</artifactId>-->
-<!--			<version>2.10.1</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.vaadin.external.google</groupId>-->
-<!--			<artifactId>android-json</artifactId>-->
-<!--			<version>0.0.20131108.vaadin1</version>-->
-<!--			<scope>compile</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.vaadin.external.google</groupId>
+			<artifactId>android-json</artifactId>
+			<version>0.0.20131108.vaadin1</version>
+			<scope>compile</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

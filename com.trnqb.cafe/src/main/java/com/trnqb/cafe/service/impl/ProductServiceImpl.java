@@ -2,19 +2,15 @@ package com.trnqb.cafe.service.impl;
 
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.ProductDTO;
-import com.trnqb.cafe.dto.UserDTO;
 import com.trnqb.cafe.entities.Category;
 import com.trnqb.cafe.entities.Product;
-import com.trnqb.cafe.entities.Role;
 import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.ProductRepository;
 import com.trnqb.cafe.service.ProductService;
 import com.trnqb.cafe.utils.CafeUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
