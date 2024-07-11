@@ -17,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -76,6 +79,36 @@ public class BillServiceImpl implements BillService {
                 return new ResponseEntity<>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
             }
             return CafeUtils.getResponseEntity("Required data not found.", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<Bill>> getBills() {
+        List<Bill> bills;
+        if (jwtFilter.isAdmin()) {
+            bills = billRepository.findAll();
+        }
+        else {
+            bills = billRepository.findAllByCreateBy(jwtFilter.getCurrentUser());
+        }
+        return new ResponseEntity<>(bills, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<String> deleteBill(Integer id) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                Optional<Bill> optional = billRepository.findById(id);
+                if (optional.isPresent()) {
+                    billRepository.deleteById(id);
+                    return CafeUtils.getResponseEntity("Bill has been deleted.", HttpStatus.OK);
+                }
+                return CafeUtils.getResponseEntity("Bill ID does not exist.", HttpStatus.OK);
+            }
+            return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             e.printStackTrace();
         }
