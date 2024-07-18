@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RequestMapping(path = "")
+@CrossOrigin(origins = "http://localhost:4200")
 public interface AuthenticationRest {
     @PostMapping(path = "/signup")
     ResponseEntity<String> signup(@RequestBody SignUpRequest signUpRequest);
@@ -18,7 +19,7 @@ public interface AuthenticationRest {
 
     @PostMapping(path = "/refresh") ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest);
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "/hello")
     ResponseEntity<String> hello();
 
     @GetMapping(path = "/checkToken")
