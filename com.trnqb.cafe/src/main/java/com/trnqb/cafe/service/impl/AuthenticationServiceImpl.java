@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -160,11 +161,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
         try {
+//            Optional<User> user = userRepository.findById(Integer.parseInt(requestMap.get("id")));
             User user = userRepository.findByEmail(requestMap.get("email"));
-            if (!Objects.isNull(user) && Strings.isNullOrEmpty(user.getEmail())) {
+            if (!Objects.isNull(user)) {
                 emailUtils.forgotMail(user.getEmail(), "Credentials by Cafe Management System", user.getName());
+
                 return CafeUtils.getResponseEntity("Check your mail for Credentials", HttpStatus.OK);
             }
+            return CafeUtils.getResponseEntity("This email does not exist.", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
