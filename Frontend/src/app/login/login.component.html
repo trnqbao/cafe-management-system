@@ -17,8 +17,8 @@
                 <mat-label>Email</mat-label>
                 <input matInput formControlName="email" required>
                 <mat-error *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
-                    <span *ngIf="loginForm.controls.email.errors.required">This fiels is mandory.</span>
-                    <span *ngIf="loginForm.controls.email.errors.pattern">This fiels is invalid.</span>
+                    <span *ngIf="loginForm.controls.email.errors.required">This field is mandory.</span>
+                    <span *ngIf="loginForm.controls.email.errors.pattern">This field is invalid.</span>
                 </mat-error>
             </mat-form-field>
 
@@ -30,7 +30,7 @@
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 <mat-error *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
-                    <span *ngIf="loginForm.controls.password.errors.required">This fiels is mandory.</span>
+                    <span *ngIf="loginForm.controls.password.errors.required">This field is mandory.</span>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -41,9 +41,9 @@
     <button mat-raised-button color="primary" type="submit" 
     (click)="handleSubmit()" 
     [disabled]="!(loginForm.valid && loginForm.dirty)">
-        <mat-icon>login</mat-icon>Login
+        <mat-icon>login</mat-icon> Login
     </button>
     <button mat-raised-button color="warn" mat-dialog-close>
-        <mat-icon>cancel</mat-icon>Close
+        <mat-icon>cancel</mat-icon> Close
     </button>
 </mat-dialog-actions>
