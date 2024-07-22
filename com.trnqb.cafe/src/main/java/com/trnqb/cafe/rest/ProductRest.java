@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequestMapping(path = "/product")
+@CrossOrigin(origins = "http://localhost:4200")
 public interface ProductRest {
     @PostMapping("/add")
     ResponseEntity<String> addNewProduct(@RequestBody Map<String, String> requestMap);
