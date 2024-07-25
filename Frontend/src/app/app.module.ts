@@ -32,7 +32,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 }
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     HomeComponent,
     BestSellerComponent,
@@ -42,7 +42,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SignupComponent,
     ForgotPasswordComponent,
     LoginComponent
-   ],
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -55,7 +55,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     HttpClientModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [HttpClientModule, {provide:HTTP_INTERCEPTORS, useClass:TokenInterceptorInterceptor, multi:true}],
+  providers: [HttpClientModule, { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

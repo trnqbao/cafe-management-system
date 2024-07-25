@@ -11,12 +11,13 @@
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="loginForm">
         <div fxFlex fxLayout="column">
-
             <!-- Email -->
             <mat-form-field appearance="standard" fxFlex>
                 <mat-label>Email</mat-label>
-                <input matInput formControlName="email" required>
-                <mat-error *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+                <input matInput formControlName="email" required />
+                <mat-error *ngIf="
+            loginForm.controls.email.touched && loginForm.controls.email.invalid
+          ">
                     <span *ngIf="loginForm.controls.email.errors.required">This field is mandory.</span>
                     <span *ngIf="loginForm.controls.email.errors.pattern">This field is invalid.</span>
                 </mat-error>
@@ -25,11 +26,16 @@
             <!-- Password -->
             <mat-form-field appearance="standard" fxFlex>
                 <mat-label>Password</mat-label>
-                <input matInput formControlName="password" type="password" required [type]="hide ? 'password': 'text'">
-                <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.arial-label]="'Hide password'" [attr.arial-pressed]="hide">
-                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <input matInput formControlName="password" type="password" required
+                    [type]="hide ? 'password' : 'text'" />
+                <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
+                    [attr.arial-label]="'Hide password'" [attr.arial-pressed]="hide">
+                    <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
                 </button>
-                <mat-error *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+                <mat-error *ngIf="
+            loginForm.controls.password.touched &&
+            loginForm.controls.password.invalid
+          ">
                     <span *ngIf="loginForm.controls.password.errors.required">This field is mandory.</span>
                 </mat-error>
             </mat-form-field>
@@ -38,9 +44,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-raised-button color="primary" type="submit" 
-    (click)="handleSubmit()" 
-    [disabled]="!(loginForm.valid && loginForm.dirty)">
+    <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()"
+        [disabled]="!(loginForm.valid && loginForm.dirty)">
         <mat-icon>login</mat-icon> Login
     </button>
     <button mat-raised-button color="warn" mat-dialog-close>

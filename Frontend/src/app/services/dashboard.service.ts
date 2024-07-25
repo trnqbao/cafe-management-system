@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 export class DashboardService {
   url = environment.apiUrl;
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
   getDetails() {
     return this.httpClient.get(this.url + "/dashboard/details");

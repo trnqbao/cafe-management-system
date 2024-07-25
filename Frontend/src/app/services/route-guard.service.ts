@@ -10,18 +10,19 @@ import { GlobalConstant } from '../shared/global-constants';
 })
 export class RouteGuardService {
 
-  constructor(private auth:AuthService,
-    public route:Router,
-    private snackbarService:SnackbarService
+  constructor(
+    private auth: AuthService,
+    public route: Router,
+    private snackbarService: SnackbarService
   ) { }
 
-  canActive(route:ActivatedRouteSnapshot):boolean {
+  canActive(route: ActivatedRouteSnapshot): boolean {
     let expectedRoleArray = route.data;
     expectedRoleArray = expectedRoleArray.expectedRole;
 
-    const token:any = localStorage.getItem('token');
+    const token: any = localStorage.getItem('token');
 
-    var tokenPayload:any;
+    var tokenPayload: any;
 
     try {
       tokenPayload = jwtDecode(token);
@@ -38,7 +39,7 @@ export class RouteGuardService {
       }
     }
 
-    if (tokenPayload.role == 'user' || tokenPayload.role == 'admin') {
+    if (tokenPayload.role == 'USER' || tokenPayload.role == 'ADMIN') {
       if (this.auth.isAuthenticated() && tokenPayload.role == expectedRole) {
         return true;
       }

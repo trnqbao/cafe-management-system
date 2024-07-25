@@ -5,7 +5,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SnackbarService } from '../services/snackbar.service';
 import { GlobalConstant } from '../shared/global-constants';
-import { error } from 'console';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,29 +12,29 @@ import { error } from 'console';
   styleUrls: ['./forgot-password.component.scss']
 })
 export class ForgotPasswordComponent implements OnInit {
-  forgotPasswordForm:any = FormGroup;
-  responseMessage:any;
+  forgotPasswordForm: any = FormGroup;
+  responseMessage: any;
 
-
-  constructor(private formBuilder:FormBuilder,
-      private userService:UserService,
-      public dialogRef:MatDialogRef<ForgotPasswordComponent>,
-      private ngxService:NgxUiLoaderService,
-      private snackbarService:SnackbarService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    public dialogRef: MatDialogRef<ForgotPasswordComponent>,
+    private ngxService: NgxUiLoaderService,
+    private snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
     this.forgotPasswordForm = this.formBuilder.group({
-      email:[null,[Validators.required, Validators.pattern(GlobalConstant.emailRegex)]]
+      email: [null, [Validators.required, Validators.pattern(GlobalConstant.emailRegex)]]
     });
   }
 
-  handleSubmit(){
+  handleSubmit() {
     this.ngxService.start();
     var formData = this.forgotPasswordForm.value;
     var data = {
-      email:formData.email
+      email: formData.email
     }
-    this.userService.forgotPassword(data).subscribe((response:any)=>{
+    this.userService.forgotPassword(data).subscribe((response: any) => {
       this.ngxService.stop();
       this.responseMessage = response?.message;
       this.dialogRef.close();

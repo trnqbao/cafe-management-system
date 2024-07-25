@@ -8,30 +8,36 @@ import { environment } from 'src/environments/environment';
 export class UserService {
   url = environment.apiUrl;
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  signup(data:any) {
+  signup(data: any) {
     return this.httpClient.post(this.url +
       "/signup", data, {
-        headers:new HttpHeaders().set('Content-Type', 'application/json')
-      })
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    })
   }
 
-  login(data:any) {
+  login(data: any) {
     return this.httpClient.post(this.url +
       "/login", data, {
-        headers:new HttpHeaders().set('Content-Type', 'application/json')
-      })
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    })
   }
 
-  forgotPassword(data:any) {
+  forgotPassword(data: any) {
     return this.httpClient.post(this.url +
       "/forgotPassword", data, {
-        headers:new HttpHeaders().set('Content-Type', 'application/json')
-      })
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    })
   }
 
   checkToken() {
     return this.httpClient.get(this.url + "/checkToken");
+  }
+
+  changePassword(data:any) {
+    return this.httpClient.post(this.url + "/changePassword", data, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    })
   }
 }
