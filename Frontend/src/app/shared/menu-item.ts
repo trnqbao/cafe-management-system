@@ -8,7 +8,7 @@ export interface Menu {
     role: string;
 }
 
-const MENUITEMS = [
+const MENU_ITEMS = [
     {
         state: 'dashboard',
         name: 'Dashboard',
@@ -20,6 +20,6 @@ const MENUITEMS = [
 @Injectable()
 export class MenuItems {
     getMenuItem(): Menu[] {
-        return MENUITEMS;
+        return MENU_ITEMS;
     }
 }

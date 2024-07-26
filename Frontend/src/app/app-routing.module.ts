@@ -19,10 +19,10 @@ const routes: Routes = [
         path: '',
         loadChildren:
           () => import('./material-component/material.module').then(m => m.MaterialComponentsModule),
-          canActivate:[RouteGuardService],
-          data:{
-            expectRole:['ADMIN', 'USER']
-          }
+        canActivate: [RouteGuardService],
+        data: {
+          expectRole: ['ADMIN', 'USER']
+        }
       },
       {
         path: 'dashboard',
