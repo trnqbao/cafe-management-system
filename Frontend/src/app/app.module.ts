@@ -19,6 +19,7 @@ import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER } from 'ngx-ui-loader';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
 import { TokenInterceptorInterceptor } from './services/token-interceptor.interceptor';
+import { RouteGuardService } from './services/route-guard.service';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   text: "Loading...",
