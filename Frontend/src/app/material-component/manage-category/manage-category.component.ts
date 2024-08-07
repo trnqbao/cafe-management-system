@@ -57,7 +57,7 @@ export class ManageCategoryComponent implements OnInit {
     };
     dialogConfig.width = "850px";
     const dialogRef = this.dialog.open(CategoryComponent, dialogConfig);
-    this.router.events.subscribe(()=> {
+    this.router.events.subscribe(() => {
       dialogRef.close();
     });
     const sub = dialogRef.componentInstance.onAddCategory.subscribe((response) => {
@@ -73,7 +73,7 @@ export class ManageCategoryComponent implements OnInit {
     };
     dialogConfig.width = "850px";
     const dialogRef = this.dialog.open(CategoryComponent, dialogConfig);
-    this.router.events.subscribe(()=> {
+    this.router.events.subscribe(() => {
       dialogRef.close();
     });
     const sub = dialogRef.componentInstance.onEditCategory.subscribe((response) => {
