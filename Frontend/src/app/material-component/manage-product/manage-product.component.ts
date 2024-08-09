@@ -144,4 +144,8 @@ export class ManageProductComponent implements OnInit {
       this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
       })
   }
+
+  isSelected(row: any) {
+    return false; // Default to false for no pre-selected rows
+  }
 }
