@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstant } from 'src/app/shared/global-constants';
 import { ProductComponent } from '../dialog/product/product.component';
+import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-manage-product',
@@ -88,9 +89,59 @@ export class ManageProductComponent implements OnInit {
     })
   }
 
-  handleDeleteAction(productId: any) { }
+  handleDeleteAction(product: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      message: "delete " + product.name,
+      confirmation: "true"
+    }
+
+    const dialogRef = this.dialog.open(ConfirmationComponent, dialogConfig);
+    const sub = dialogRef.componentInstance.onEmitStatusChange.subscribe((res)=> {
+      this.ngxService.start();
+      this.deleteProduct(product.id);
+      dialogRef.close();
+    })
+   }
+
+  deleteProduct(id:any) {
+    this.productService.delete(id).subscribe((res:any) => {
+      this.ngxService.stop();
+      this.tableData();
+      this.responseMessage = res?.message;
+      this.snackbarService.openSnackBar(this.responseMessage, "success");
+    }, (error:any)=> {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstant.genericError;
+      }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
+    })
+  }
 
   onChange(status: any, id: any) {
+      this.ngxService.start();
+      var data = {
+        status: status.toString(),
+        id: id
+      }
 
+      this.productService.updateStatus(data).subscribe((res:any) => {
+        this.ngxService.stop();
+        this.responseMessage = res?.message;
+        this.snackbarService.openSnackBar(this.responseMessage, "success");
+      }, (error:any)=> {
+        this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstant.genericError;
+      }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
+      })
   }
 }
