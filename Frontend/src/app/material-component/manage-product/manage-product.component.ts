@@ -15,16 +15,17 @@ import { ProductComponent } from '../dialog/product/product.component';
 })
 export class ManageProductComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'category', 'description', 'price', 'edit'];
-  dataSource:any;
-  length1:any;
-  responseMessage:any;
+  displayedColumns: string[] =
+    ['name', 'category', 'description', 'price', 'edit'];
+  dataSource: any;
+  // length1:any;
+  responseMessage: any;
 
-  constructor(private productService:ProductService,
-    private ngxService:NgxUiLoaderService,
-    private dialog:MatDialog,
-    private snackbarService:SnackbarService,
-    private router:Router
+  constructor(private productService: ProductService,
+    private ngxService: NgxUiLoaderService,
+    private dialog: MatDialog,
+    private snackbarService: SnackbarService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -33,13 +34,12 @@ export class ManageProductComponent implements OnInit {
   }
 
   tableData() {
-    this.productService.getProducts().subscribe((res:any) => {
+    this.productService.getProducts().subscribe((res: any) => {
       this.ngxService.stop();
       this.dataSource = new MatTableDataSource(res);
-    }, (error:any) => {
+    }, (error: any) => {
       this.ngxService.stop();
       console.log(error.error?.message);
-
       if (error.error?.message) {
         this.responseMessage = error.error?.message;
       } else {
@@ -49,7 +49,7 @@ export class ManageProductComponent implements OnInit {
     })
   }
 
-  applyFilter(event:Event) {
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -65,31 +65,32 @@ export class ManageProductComponent implements OnInit {
       dialogRef.close();
     });
 
-    const sub = dialogRef.componentInstance.onAddProduct.subscribe((res)=> {
+    const sub = dialogRef.componentInstance.onAddProduct.subscribe((res) => {
       this.tableData();
     })
   }
 
-  handleEditAction(data:any) {
+  handleEditAction(productData: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       action: "Edit",
-      data: data
+      data: productData
     };
+
     dialogConfig.width = "850px";
     const dialogRef = this.dialog.open(ProductComponent, dialogConfig);
     this.router.events.subscribe(() => {
       dialogRef.close();
     });
 
-    const sub = dialogRef.componentInstance.onEditProduct.subscribe((res)=> {
+    const sub = dialogRef.componentInstance.onEditProduct.subscribe((res) => {
       this.tableData();
     })
   }
 
-  handleDeleteAction(values:any) {}
+  handleDeleteAction(productId: any) { }
 
-  onChange(status:any, id:any) {
+  onChange(status: any, id: any) {
 
   }
 }

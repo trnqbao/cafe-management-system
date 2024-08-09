@@ -12,6 +12,7 @@
     <form [formGroup]="productForm">
         <div fxFlex fxLayout="column">
 
+            <!-- product name -->
             <div fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Name</mat-label>
@@ -23,6 +24,7 @@
                 </mat-form-field>
             </div>
 
+            <!-- product price & category -->
             <div fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Price</mat-label>
@@ -36,18 +38,22 @@
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Category</mat-label>
                     <mat-select formControlName="categoryId">
-                        <mat-option *ngFor="let category of categories" [value]="category.id">
-                            {{ category.name }}
+                        <mat-option 
+                        *ngFor="let category of categories" 
+                        [value]="category.id">
+                            {{category.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
 
+            <!-- product description -->
             <div fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Description</mat-label>
                     <input matInput formControlName="description" required>
-                    <mat-error *ngIf="productForm.controls.description.touched && productForm.controls.description.invalid">
+                    <mat-error
+                        *ngIf="productForm.controls.description.touched && productForm.controls.description.invalid">
                         <span *ngIf="productForm.controls.description.errors.required">This field is mandatory.</span>
                         <span *ngIf="productForm.controls.description.errors.pattern">This field is invalid.</span>
                     </mat-error>
@@ -58,7 +64,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()" [disabled]="!(productForm.valid && productForm.dirty)">
+    <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()"
+        [disabled]="!(productForm.valid && productForm.dirty)">
         <mat-icon>save</mat-icon> {{action}}
     </button>
 
@@ -66,4 +73,3 @@
         <mat-icon>cancel</mat-icon> Close
     </button>
 </mat-dialog-actions>
-
