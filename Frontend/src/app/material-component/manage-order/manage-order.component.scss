@@ -11,5 +11,9 @@ table {
 }
 
 mat-card {
-    padding-bottom: 30px, im !important;
+    padding-bottom: 30px !important;
+}
+
+.hovered:hover {
+    background-color: #f0f0f0;
 }

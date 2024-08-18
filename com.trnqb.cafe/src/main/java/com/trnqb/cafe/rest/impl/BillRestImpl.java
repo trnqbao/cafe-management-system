@@ -40,6 +40,16 @@ public class BillRestImpl implements BillRest {
     }
 
     @Override
+    public ResponseEntity<byte[]> getPdf(Map<String, Object> requestMap) {
+        try {
+            return billService.getPdf(requestMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public ResponseEntity<String> deleteBill(Integer id) {
         try {
             return billService.deleteBill(id);

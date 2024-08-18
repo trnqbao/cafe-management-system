@@ -11,12 +11,13 @@ import com.trnqb.cafe.repository.BillRepository;
 import com.trnqb.cafe.service.BillService;
 import com.trnqb.cafe.utils.CafeUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.pdfbox.io.IOUtils;
 import org.json.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +114,37 @@ public class BillServiceImpl implements BillService {
             e.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getPdf(Map<String, Object> requestMap) {
+        try {
+            byte[] bytes = new byte[0];
+            if (!requestMap.containsKey("uuid") && validateRequestMap(requestMap)) {
+                return new ResponseEntity<>(bytes, HttpStatus.BAD_REQUEST);
+            }
+            String filePath = CafeConstants.STORE_LOCATION + "\\" + (String) requestMap.get("uuid") + ".pdf";
+            if (CafeUtils.isFileExist(filePath)) {
+                bytes = getByteArray(filePath);
+                return new ResponseEntity<>(bytes, HttpStatus.OK);
+            } else {
+                requestMap.put("isGenerate", false);
+                generateReport(requestMap);
+                bytes = getByteArray(filePath);
+                return new ResponseEntity<>(bytes, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private byte[] getByteArray(String filePath) throws Exception {
+        File init = new File(filePath);
+        InputStream targetStream = new FileInputStream(init);
+        byte[] bytes = IOUtils.toByteArray(targetStream);
+        targetStream.close();
+        return bytes;
     }
 
     private void addRows(PdfPTable table, Map<String, Object> data) {

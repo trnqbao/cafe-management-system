@@ -155,7 +155,7 @@ export class ManageOrderComponent implements OnInit {
       email: formData.email,
       phoneNumber: formData.phoneNumber,
       paymentMethod: formData.paymentMethod,
-      totalAmount: this.totalAmount.toString(),
+      totalAmount: this.totalAmount,
       productDetails: JSON.stringify(this.dataSource)
     }
 
