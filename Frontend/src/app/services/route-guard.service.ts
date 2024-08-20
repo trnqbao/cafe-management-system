@@ -18,7 +18,7 @@ export class RouteGuardService {
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     let expectedRoleArray = route.data;
-  
+
     expectedRoleArray = expectedRoleArray.expectedRole;
 
     const token: any = localStorage.getItem('token');
@@ -31,9 +31,9 @@ export class RouteGuardService {
       localStorage.clear();
       this.route.navigate(['/']);
     }
-    
+
     let expectedRole = '';
-    
+
     for (let i = 0; i < expectedRoleArray.length; i++) {
       if (expectedRoleArray[i] == tokenPayload.role) {
         expectedRole = tokenPayload.role;

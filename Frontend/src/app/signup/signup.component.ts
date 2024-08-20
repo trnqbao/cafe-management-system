@@ -16,25 +16,25 @@ export class SignupComponent implements OnInit {
 
   password = true;
   confirmPassword = true;
-  signupForm:any = FormGroup;
-  responseMessage:any;
+  signupForm: any = FormGroup;
+  responseMessage: any;
 
   constructor(
-    private formBuilder:FormBuilder,
-    private router:Router,
-    private userService:UserService,
-    private snackBarService:SnackbarService,
-    public dialogRef:MatDialogRef<SignupComponent>,
-    private ngxService:NgxUiLoaderService
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private userService: UserService,
+    private snackBarService: SnackbarService,
+    public dialogRef: MatDialogRef<SignupComponent>,
+    private ngxService: NgxUiLoaderService
   ) { }
 
   ngOnInit(): void {
     this.signupForm = this.formBuilder.group({
-      name:[null, [Validators.required, Validators.pattern(GlobalConstant.nameRegex)]],
-      email:[null, [Validators.required, Validators.pattern(GlobalConstant.emailRegex)]],
-      phoneNumber:[null, [Validators.required, Validators.pattern(GlobalConstant.phoneNumberRegex)]],
-      password:[null, [Validators.required]],
-      confirmPassword:[null, [Validators.required]]
+      name: [null, [Validators.required, Validators.pattern(GlobalConstant.nameRegex)]],
+      email: [null, [Validators.required, Validators.pattern(GlobalConstant.emailRegex)]],
+      phoneNumber: [null, [Validators.required, Validators.pattern(GlobalConstant.phoneNumberRegex)]],
+      password: [null, [Validators.required]],
+      confirmPassword: [null, [Validators.required]]
     })
   }
 
@@ -56,14 +56,14 @@ export class SignupComponent implements OnInit {
       password: formData.password
     }
 
-    this.userService.signup(data).subscribe((response:any)=>{
+    this.userService.signup(data).subscribe((response: any) => {
       this.ngxService.stop();
       this.dialogRef.close();
       this.responseMessage = response?.message;
       this.snackBarService.openSnackBar(this.responseMessage, "");
       this.router.navigate(['/']);
 
-    }, (error)=> {
+    }, (error) => {
       this.ngxService.stop();
       if (error.error?.message) {
         this.responseMessage = error.error?.message;

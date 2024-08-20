@@ -180,7 +180,7 @@ export class ManageOrderComponent implements OnInit {
       uuid: fileName
     }
 
-    this.billService.getPdf(data).subscribe((res:any)=> {
+    this.billService.getPdf(data).subscribe((res: any) => {
       saveAs(res, fileName + ".pdf");
       this.ngxService.stop();
     })

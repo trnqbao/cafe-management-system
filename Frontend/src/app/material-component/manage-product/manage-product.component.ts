@@ -97,20 +97,20 @@ export class ManageProductComponent implements OnInit {
     }
 
     const dialogRef = this.dialog.open(ConfirmationComponent, dialogConfig);
-    const sub = dialogRef.componentInstance.onEmitStatusChange.subscribe((res)=> {
+    const sub = dialogRef.componentInstance.onEmitStatusChange.subscribe((res) => {
       this.ngxService.start();
       this.deleteProduct(product.id);
       dialogRef.close();
     })
-   }
+  }
 
-  deleteProduct(id:any) {
-    this.productService.delete(id).subscribe((res:any) => {
+  deleteProduct(id: any) {
+    this.productService.delete(id).subscribe((res: any) => {
       this.ngxService.stop();
       this.tableData();
       this.responseMessage = res?.message;
       this.snackbarService.openSnackBar(this.responseMessage, "success");
-    }, (error:any)=> {
+    }, (error: any) => {
       this.ngxService.stop();
       console.log(error.error?.message);
       if (error.error?.message) {
@@ -123,18 +123,18 @@ export class ManageProductComponent implements OnInit {
   }
 
   onChange(status: any, id: any) {
-      this.ngxService.start();
-      var data = {
-        status: status.toString(),
-        id: id
-      }
+    this.ngxService.start();
+    var data = {
+      status: status.toString(),
+      id: id
+    }
 
-      this.productService.updateStatus(data).subscribe((res:any) => {
-        this.ngxService.stop();
-        this.responseMessage = res?.message;
-        this.snackbarService.openSnackBar(this.responseMessage, "success");
-      }, (error:any)=> {
-        this.ngxService.stop();
+    this.productService.updateStatus(data).subscribe((res: any) => {
+      this.ngxService.stop();
+      this.responseMessage = res?.message;
+      this.snackbarService.openSnackBar(this.responseMessage, "success");
+    }, (error: any) => {
+      this.ngxService.stop();
       console.log(error.error?.message);
       if (error.error?.message) {
         this.responseMessage = error.error?.message;
@@ -142,7 +142,7 @@ export class ManageProductComponent implements OnInit {
         this.responseMessage = GlobalConstant.genericError;
       }
       this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
-      })
+    })
   }
 
   isSelected(row: any) {

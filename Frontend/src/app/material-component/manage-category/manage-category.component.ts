@@ -11,15 +11,15 @@ import { CategoryComponent } from '../dialog/category/category.component';
 @Component({
   selector: 'app-manage-category',
   templateUrl: './manage-category.component.html',
-  styleUrls: ['./manage-category.component.scss']
+  styleUrls: ['./manage-category.component.scss'],
 })
 export class ManageCategoryComponent implements OnInit {
-
   displayedColumns: string[] = ['name', 'edit'];
   dataSource: any;
   responseMessage: any;
 
-  constructor(private categoryService: CategoryService,
+  constructor(
+    private categoryService: CategoryService,
     private ngxService: NgxUiLoaderService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService,
@@ -32,17 +32,23 @@ export class ManageCategoryComponent implements OnInit {
   }
 
   tableData() {
-    this.categoryService.getCategories().subscribe((res: any) => {
-      this.ngxService.stop();
-      this.dataSource = new MatTableDataSource(res)
-    }, (error: any) => {
-      this.ngxService.stop();
-      console.log(error.error?.message);
-      if (this.responseMessage = error.error?.message) {
-        this.responseMessage = GlobalConstant.genericError;
+    this.categoryService.getCategories().subscribe(
+      (res: any) => {
+        this.ngxService.stop();
+        this.dataSource = new MatTableDataSource(res);
+      },
+      (error: any) => {
+        this.ngxService.stop();
+        console.log(error.error?.message);
+        if ((this.responseMessage = error.error?.message)) {
+          this.responseMessage = GlobalConstant.genericError;
+        }
+        this.snackbarService.openSnackBar(
+          this.responseMessage,
+          GlobalConstant.error
+        );
       }
-      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
-    })
+    );
   }
 
   applyFilter(event: Event) {
@@ -53,31 +59,35 @@ export class ManageCategoryComponent implements OnInit {
   handleAddAction() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      action: 'Add'
+      action: 'Add',
     };
-    dialogConfig.width = "850px";
+    dialogConfig.width = '850px';
     const dialogRef = this.dialog.open(CategoryComponent, dialogConfig);
     this.router.events.subscribe(() => {
       dialogRef.close();
     });
-    const sub = dialogRef.componentInstance.onAddCategory.subscribe((response) => {
-      this.tableData();
-    })
+    const sub = dialogRef.componentInstance.onAddCategory.subscribe(
+      (response) => {
+        this.tableData();
+      }
+    );
   }
 
   handleEditAction(data: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       action: 'Edit',
-      data: data
+      data: data,
     };
-    dialogConfig.width = "850px";
+    dialogConfig.width = '850px';
     const dialogRef = this.dialog.open(CategoryComponent, dialogConfig);
     this.router.events.subscribe(() => {
       dialogRef.close();
     });
-    const sub = dialogRef.componentInstance.onEditCategory.subscribe((response) => {
-      this.tableData();
-    })
+    const sub = dialogRef.componentInstance.onEditCategory.subscribe(
+      (response) => {
+        this.tableData();
+      }
+    );
   }
 }

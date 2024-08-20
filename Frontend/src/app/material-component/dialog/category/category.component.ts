@@ -14,19 +14,19 @@ export class CategoryComponent implements OnInit {
 
   onAddCategory = new EventEmitter();
   onEditCategory = new EventEmitter();
-  categoryForm:any = FormGroup;
-  action:any = "Add";
-  dialogAction:any = "Add";
-  responseMessage:any;
-  constructor(@Inject(MAT_DIALOG_DATA) public dialogData:any,
-private formBuilder:FormBuilder,
-private categoryService:CategoryService,
-public dialogRef:MatDialogRef<CategoryComponent>,
-private snackbarService: SnackbarService) { }
+  categoryForm: any = FormGroup;
+  action: any = "Add";
+  dialogAction: any = "Add";
+  responseMessage: any;
+  constructor(@Inject(MAT_DIALOG_DATA) public dialogData: any,
+    private formBuilder: FormBuilder,
+    private categoryService: CategoryService,
+    public dialogRef: MatDialogRef<CategoryComponent>,
+    private snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
     this.categoryForm = this.formBuilder.group({
-      name:[null, [Validators.required]]
+      name: [null, [Validators.required]]
     });
     if (this.dialogData.action === "Edit") {
       this.dialogAction = "Edit";
@@ -48,7 +48,7 @@ private snackbarService: SnackbarService) { }
     var data = {
       name: formData.name
     }
-    this.categoryService.add(data).subscribe((res:any) => {
+    this.categoryService.add(data).subscribe((res: any) => {
       this.dialogRef.close();
       this.onAddCategory.emit();
       this.responseMessage = res.message;
@@ -71,7 +71,7 @@ private snackbarService: SnackbarService) { }
       id: this.dialogData.data.id,
       name: formData.name
     }
-    this.categoryService.update(data).subscribe((res:any) => {
+    this.categoryService.update(data).subscribe((res: any) => {
       this.dialogRef.close();
       this.onEditCategory.emit();
       this.responseMessage = res.message;

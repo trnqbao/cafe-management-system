@@ -16,22 +16,22 @@ export class ChangePasswordComponent implements OnInit {
   oldPassword = true;
   newPassword = true;
   confirmPassword = true;
-  changePasswordForm:any = FormGroup;
-  responseMessage:any;
+  changePasswordForm: any = FormGroup;
+  responseMessage: any;
 
   constructor(
-    private formBuilder:FormBuilder,
-    private userService:UserService,
-    public dialogRef:MatDialogRef<ChangePasswordComponent>, 
-    private ngxService:NgxUiLoaderService,
-    private snackbarService:SnackbarService
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    public dialogRef: MatDialogRef<ChangePasswordComponent>,
+    private ngxService: NgxUiLoaderService,
+    private snackbarService: SnackbarService
   ) { }
-  
+
   ngOnInit(): void {
     this.changePasswordForm = this.formBuilder.group({
-      oldPassword:[null, Validators.required],
-      newPassword:[null, Validators.required],
-      confirmPassword:[null, Validators.required],
+      oldPassword: [null, Validators.required],
+      newPassword: [null, Validators.required],
+      confirmPassword: [null, Validators.required],
     })
   }
 
@@ -52,7 +52,7 @@ export class ChangePasswordComponent implements OnInit {
       confirmPassword: formData.confirmPassword
     }
 
-    this.userService.changePassword(data).subscribe((res:any) => {
+    this.userService.changePassword(data).subscribe((res: any) => {
       this.ngxService.stop();
       this.responseMessage = res?.message;
       this.dialogRef.close();

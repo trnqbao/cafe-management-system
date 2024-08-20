@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         try {
             System.out.println("ID: " + String.valueOf(requestMap.get("id")));
-            //todo: check role
             if (jwtFilter.isAdmin()) {
                 Optional<User> optional = userRepository.findById(Integer.parseInt(requestMap.get("id")));
                 if (optional.isPresent()) {
@@ -88,6 +87,7 @@ public class UserServiceImpl implements UserService {
 
     private UserDTO mapToDTO(final User user, final UserDTO userDto) {
         userDto.setId(user.getId());
+        userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setRole(user.getRole());

@@ -9,10 +9,12 @@ export interface Menu {
 }
 
 const MENU_ITEMS = [
-    { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'dashboard', role: ''}, 
-    { state: 'category', name: 'Manage Category', type: 'link', icon: 'category', role: 'ADMIN'},
-    { state: 'product', name: 'Manage Product', type: 'link', icon: 'inventory', role: 'ADMIN'},
-    { state: 'order', name: 'Manage Order', type: 'link', icon: 'shopping_cart', role: ''}
+    { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'dashboard', role: '' },
+    { state: 'category', name: 'Manage Category', type: 'link', icon: 'category', role: 'ADMIN' },
+    { state: 'product', name: 'Manage Product', type: 'link', icon: 'inventory', role: 'ADMIN' },
+    { state: 'order', name: 'Manage Order', type: 'link', icon: 'shopping_cart', role: '' },
+    { state: 'bill', name: 'Manage Bill', type: 'link', icon: 'backup_table', role: '' },
+    { state: 'user', name: 'Manage User', type: 'link', icon: 'people', role: 'ADMIN' }
 ]
 @Injectable()
 export class MenuItems {
