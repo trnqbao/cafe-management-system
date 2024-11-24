@@ -11,13 +11,14 @@ import java.util.Map;
 public interface UserService {
 //    UserDetailsService userDetailsService();
 
-    ResponseEntity<String> signUp(Map<String, String> requestMap);
+    ResponseEntity<String> signup(Map<String, String> requestMap);
 
     ResponseEntity<String> login(Map<String, String> requestMap);
 
     ResponseEntity<List<UserDTO>> getAllUser();
 
     ResponseEntity<String> update(Map<String, String> requestMap);
+
 
 //    User getUserDetails();
 

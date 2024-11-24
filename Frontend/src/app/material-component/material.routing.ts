@@ -6,6 +6,8 @@ import { ManageProductComponent } from './manage-product/manage-product.componen
 import { ManageOrderComponent } from './manage-order/manage-order.component';
 import { ManageBillComponent } from './manage-bill/manage-bill.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
+import { ManageCustomerComponent } from './manage-customer/manage-customer.component';
+import { ManageFinancialComponent } from './manage-financial/manage-financial.component';
 
 
 export const MaterialRoutes: Routes = [
@@ -52,5 +54,24 @@ export const MaterialRoutes: Routes = [
         data: {
             expectedRole: ['ADMIN']
         }
+    },
+
+    {
+        path: 'customer',
+        component: ManageCustomerComponent,
+        canActivate: [RouteGuardService],
+        data: {
+            expectedRole: ['ADMIN', 'USER']
+        }
+    },
+
+    {
+        path: 'revenue',
+        component: ManageFinancialComponent,
+        canActivate: [RouteGuardService],
+        data: {
+            expectedRole: ['ADMIN']
+        }
     }
+
 ];

@@ -1,6 +1,5 @@
 package com.trnqb.cafe.service.impl;
 
-import com.trnqb.cafe.entities.User;
 import com.trnqb.cafe.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,9 +7,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +59,7 @@ public class JWTServiceImpl implements JWTService {
         return extractClaims(token, Claims::getExpiration);
     }
 
-    private<T> T extractClaims(
+    private <T> T extractClaims(
             String token,
             Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -84,7 +80,6 @@ public class JWTServiceImpl implements JWTService {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
 
 
     private Boolean isTokenExpired(String token) {

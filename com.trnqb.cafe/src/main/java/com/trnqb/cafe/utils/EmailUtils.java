@@ -45,7 +45,7 @@ public class EmailUtils {
 
     private String[] getCcArray(List<String> list) {
         String[] cc = new String[list.size()];
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             cc[i] = list.get(i);
         }
         return cc;

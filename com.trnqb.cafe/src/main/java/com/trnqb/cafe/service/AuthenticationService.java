@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface AuthenticationService {
-    ResponseEntity<String> signup(SignUpRequest signUpRequest);
+    ResponseEntity<String> signup(Map<String, String> requestMap);
 
     String hello();
 
-    ResponseEntity<String> login(SignInRequest signInRequest);
+    ResponseEntity<String> login(Map<String, String> requestMap);
 
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 

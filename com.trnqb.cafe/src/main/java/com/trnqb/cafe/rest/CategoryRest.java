@@ -1,9 +1,6 @@
 package com.trnqb.cafe.rest;
 
-import com.trnqb.cafe.constants.CafeConstants;
-import com.trnqb.cafe.entities.Category;
-import com.trnqb.cafe.utils.CafeUtils;
-import org.springframework.http.HttpStatus;
+import com.trnqb.cafe.dto.CategoryDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +14,7 @@ public interface CategoryRest {
     ResponseEntity<String> addNewCategory(@RequestBody(required = true) Map<String, String> requestMap);
 
     @GetMapping(path = "/get")
-    ResponseEntity<List<Category>> getAllCategory(@RequestParam(required = false) String filterValue);
+    ResponseEntity<List<CategoryDTO>> getAllCategory(@RequestParam(required = false) String filterValue);
 
     @PostMapping(path = "/update")
     ResponseEntity<String> updateCategory(@RequestBody(required = true) Map<String, String> requestMap);

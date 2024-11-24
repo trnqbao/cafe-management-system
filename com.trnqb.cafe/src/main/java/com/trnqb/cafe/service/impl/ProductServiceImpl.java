@@ -2,8 +2,8 @@ package com.trnqb.cafe.service.impl;
 
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.ProductDTO;
-import com.trnqb.cafe.entities.Category;
-import com.trnqb.cafe.entities.Product;
+import com.trnqb.cafe.entity.Category;
+import com.trnqb.cafe.entity.Product;
 import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.ProductRepository;
 import com.trnqb.cafe.service.ProductService;
@@ -25,12 +25,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     private final JwtFilter jwtFilter;
+
     @Override
     public ResponseEntity<String> addNewProduct(Map<String, String> requestMap) {
         try {
             if (jwtFilter.isAdmin()) {
                 if (validateProductMap(requestMap, false)) {
-                    productRepository.save(getProductFromMap(requestMap, false));
+                    productRepository.save(mapToEntity(requestMap, false));
                     return CafeUtils.getResponseEntity("Product added successfully", HttpStatus.OK);
                 }
                 return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
@@ -62,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
                 if (validateProductMap(requestMap, true)) {
                     Optional<Product> optional = productRepository.findById(Integer.parseInt(requestMap.get("id")));
                     if (optional.isPresent()) {
-                        Product product = getProductFromMap(requestMap, true);
+                        Product product = mapToEntity(requestMap, true);
                         product.setStatus(optional.get().getStatus());
                         productRepository.save(product);
                         return CafeUtils.getResponseEntity("Product has been updated.", HttpStatus.OK);
@@ -157,7 +158,7 @@ public class ProductServiceImpl implements ProductService {
         return productDTO;
     }
 
-    private Product getProductFromMap(Map<String, String> requestMap, boolean isAdd) {
+    private Product mapToEntity(Map<String, String> requestMap, boolean isAdd) {
         Category category = new Category();
         category.setId(Integer.parseInt(requestMap.get("categoryId")));
 
@@ -174,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
-    private boolean validateProductMap(Map<String, String> requestMap, boolean validateID)  {
+    private boolean validateProductMap(Map<String, String> requestMap, boolean validateID) {
         if (requestMap.containsKey("name")) {
             if (requestMap.containsKey("id") && validateID) {
                 return true;

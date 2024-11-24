@@ -12,6 +12,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DashboardRestImpl implements DashboardRest {
     private final DashboardService dashboardService;
+
     @Override
     public ResponseEntity<Map<String, Object>> getCount() {
         return dashboardService.getCount();

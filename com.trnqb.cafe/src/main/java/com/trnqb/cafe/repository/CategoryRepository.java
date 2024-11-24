@@ -1,6 +1,6 @@
 package com.trnqb.cafe.repository;
 
-import com.trnqb.cafe.entities.Category;
+import com.trnqb.cafe.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -17,8 +17,9 @@ import java.util.Objects;
 @Slf4j
 public class CustomerUserDetailsService implements UserDetailsService {
     @Getter
-    private com.trnqb.cafe.entities.User userDetails;
+    private com.trnqb.cafe.entity.User userDetails;
     private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("Inside loadUserByUsername {}", username);
@@ -26,8 +27,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
         if (!Objects.isNull(userDetails)) {
             return new org.springframework.security.core.userdetails.User(userDetails.getEmail(), userDetails.getPassword(), new ArrayList<>());
         } else {
-                throw new UsernameNotFoundException("User not found.");
+            throw new UsernameNotFoundException("User not found.");
         }
     }
-
 }

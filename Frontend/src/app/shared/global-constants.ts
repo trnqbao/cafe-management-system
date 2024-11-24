@@ -1,4 +1,5 @@
 export class GlobalConstant {
+    
 
     //Message
     public static genericError: string = "Something went wrong. Please try again later.";
@@ -7,7 +8,7 @@ export class GlobalConstant {
 
 
     public static productExistError: string = "Product already exists.";
-
+    public static productQuantityUpdated: string = "Product quantity has been updated.";
     public static productAdded: string = "Product added successfully."
     //Regex
     public static nameRegex: string = "[a-zA-Z0-9 ]*";

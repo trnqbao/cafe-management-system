@@ -1,4 +1,4 @@
-package com.trnqb.cafe.entities;
+package com.trnqb.cafe.dto;
 
 public enum Role {
     USER,

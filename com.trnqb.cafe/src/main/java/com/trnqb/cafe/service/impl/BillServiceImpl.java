@@ -5,10 +5,12 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.trnqb.cafe.constants.CafeConstants;
-import com.trnqb.cafe.entities.Bill;
+import com.trnqb.cafe.dto.BillDTO;
+import com.trnqb.cafe.entity.Bill;
 import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.BillRepository;
 import com.trnqb.cafe.service.BillService;
+import com.trnqb.cafe.service.CustomerService;
 import com.trnqb.cafe.utils.CafeUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.io.IOUtils;
@@ -18,17 +20,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
+    private final CustomerService customerService;
     private final JwtFilter jwtFilter;
+
     @Override
     public ResponseEntity<String> generateReport(Map<String, Object> requestMap) {
         try {
@@ -43,9 +45,15 @@ public class BillServiceImpl implements BillService {
                 }
 
                 String data = "Name: " + requestMap.get("name") + "\n"
-                        + "Phone Number: "  + requestMap.get("phoneNumber") + "\n"
+                        + "Phone Number: " + requestMap.get("phoneNumber") + "\n"
                         + "Email: " + requestMap.get("email") + "\n"
                         + "Payment Method: " + requestMap.get("paymentMethod");
+
+                Map<String, String> customerInfo = new HashMap<>();
+                customerInfo.put("name", (String) requestMap.get("name"));
+                customerInfo.put("email", (String) requestMap.get("email"));
+                customerInfo.put("phoneNumber", (String) requestMap.get("phoneNumber"));
+                customerService.addCustomer(customerInfo);
 
                 Document document = new Document();
                 PdfWriter.getInstance(document,
@@ -87,13 +95,12 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public ResponseEntity<List<Bill>> getBills() {
-        List<Bill> bills;
+    public ResponseEntity<List<BillDTO>> getBills() {
+        List<BillDTO> bills;
         if (jwtFilter.isAdmin()) {
-            bills = billRepository.findAll();
-        }
-        else {
-            bills = billRepository.findAllByCreateBy(jwtFilter.getCurrentUser());
+            bills = billRepository.findAll().stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+        } else {
+            bills = billRepository.findAllByCreateBy(jwtFilter.getCurrentUser()).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();;
         }
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
@@ -135,6 +142,16 @@ public class BillServiceImpl implements BillService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Integer> getDailyRevenue(Date date) {
+        Double total = (double) 0;
+        List<BillDTO> billDTOS = billRepository.findAllByDate(date).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+        for (BillDTO billDTO : billDTOS) {
+            total += billDTO.getTotal().doubleValue();
         }
         return null;
     }
@@ -207,6 +224,7 @@ public class BillServiceImpl implements BillService {
             bill.setTotal((Integer) requestMap.get("totalAmount"));
             bill.setProductDetails((String) requestMap.get("productDetails"));
             bill.setCreateBy(jwtFilter.getCurrentUser());
+            bill.setDate(new Date());
             billRepository.save(bill);
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,5 +238,19 @@ public class BillServiceImpl implements BillService {
                 requestMap.containsKey("paymentMethod") &&
                 requestMap.containsKey("productDetails") &&
                 requestMap.containsKey("totalAmount");
+    }
+
+    private BillDTO mapToDTO(final Bill bill, final BillDTO billDTO) {
+        billDTO.setId(bill.getId());
+        billDTO.setUuid(bill.getUuid());
+        billDTO.setName(bill.getName());
+        billDTO.setEmail(bill.getEmail());
+        billDTO.setPhoneNumber(bill.getPhoneNumber());
+        billDTO.setPaymentMethod(bill.getPaymentMethod());
+        billDTO.setTotal(bill.getTotal());
+        billDTO.setProductDetails(bill.getProductDetails());
+        billDTO.setCreateBy(bill.getCreateBy());
+        billDTO.setDate(bill.getDate());
+        return billDTO;
     }
 }

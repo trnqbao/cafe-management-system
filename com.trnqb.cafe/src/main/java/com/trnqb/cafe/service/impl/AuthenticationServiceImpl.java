@@ -1,13 +1,10 @@
 package com.trnqb.cafe.service.impl;
 
-import com.google.common.base.Strings;
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.JwtAuthenticationResponse;
 import com.trnqb.cafe.dto.RefreshTokenRequest;
-import com.trnqb.cafe.dto.SignInRequest;
-import com.trnqb.cafe.dto.SignUpRequest;
-import com.trnqb.cafe.entities.Role;
-import com.trnqb.cafe.entities.User;
+import com.trnqb.cafe.dto.Role;
+import com.trnqb.cafe.entity.User;
 import com.trnqb.cafe.jwt.CustomerUserDetailsService;
 import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.UserRepository;
@@ -26,11 +23,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,13 +42,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final CustomerUserDetailsService customerUserDetailsService;
 
 
-    public ResponseEntity<String> signup(SignUpRequest signUpRequest) {
+    public ResponseEntity<String> signup(Map<String, String> requestMap) {
         try {
-            if (validateSignUp(signUpRequest)) {
-                User user = userRepository.findByEmail(signUpRequest.getEmail());
+            if (validateSignUp(requestMap)) {
+                User user = userRepository.findByEmail(requestMap.get("email"));
 
                 if (Objects.isNull(user)) {
-                    userRepository.save(getUserFromSignUpRequest(signUpRequest));
+                    userRepository.save(getUserFromSignUp(requestMap));
                     return CafeUtils.getResponseEntity(CafeConstants.REGISTERED, HttpStatus.OK);
                 } else {
                     return CafeUtils.getResponseEntity(CafeConstants.EXISTED_EMAIL, HttpStatus.BAD_REQUEST);
@@ -65,17 +61,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private boolean validateSignUp(SignUpRequest signUpRequest) {
-        // todo
-        return true;
+    private boolean validateSignUp(Map<String, String> requestMap) {
+        if (requestMap.containsKey("name") && requestMap.containsKey("email") && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")) {
+            return true;
+        }
+        return false;
     }
 
-    private User getUserFromSignUpRequest(SignUpRequest signUpRequest) {
+    private User getUserFromSignUp(Map<String, String> requestMap) {
         User user = new User();
-        user.setName(signUpRequest.getName());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPhoneNumber(signUpRequest.getPhoneNumber());
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setName(requestMap.get("name"));
+        user.setEmail(requestMap.get("email"));
+        user.setPhoneNumber(requestMap.get("phoneNumber"));
+        user.setPassword(passwordEncoder.encode(requestMap.get("password")));
         user.setRole(Role.USER);
         user.setStatus("false");
         return user;
@@ -85,12 +83,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return "Hello";
     }
 
-    public ResponseEntity<String> login(SignInRequest signInRequest) {
-        log.info("Inside login");
+    public ResponseEntity<String> login(@RequestBody Map<String, String> requestMap) {
+        log.info("Inside login {}", requestMap.get("email"));
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    signInRequest.getEmail(),
-                    signInRequest.getPassword()));
+                    requestMap.get("email"), requestMap.get("password")));
 
             if (authentication.isAuthenticated()) {
                 if (customerUserDetailsService.getUserDetails().getStatus().equalsIgnoreCase("true")) {
@@ -98,16 +95,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             jwtService.generateToken(customerUserDetailsService.getUserDetails().getEmail(),
                                     String.valueOf(customerUserDetailsService.getUserDetails().getRole())) + "\"}",
                             HttpStatus.OK);
-                }
-                else {
-                    return new ResponseEntity<String>("{\"message\":\"" + "Wait for admin approval."+"\"}",
+                } else {
+                    return new ResponseEntity<String>("{\"message\":\"" + "Wait for admin approval." + "\"}",
                             HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (Exception e) {
             log.error("{}", e);
         }
-        return new ResponseEntity<String>("{\"message\":\"" + "Bad Credentials."+"\"}", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>("{\"message\":\"" + "Bad Credentials." + "\"}", HttpStatus.BAD_REQUEST);
 
 //            var user = userRepository.findByEmail(signInRequest.getEmail());
 //

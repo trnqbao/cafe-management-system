@@ -10,6 +10,5 @@ public class CafeConstants {
     public static final String UPDATED_STATUS = "User status updated successfully.";
     public static final String INCORRECT_OLD_PASSWORD = "Incorrect old password.";
     public static final String UPDATED_PWD = "Password updated successfully.";
-
     public static final String STORE_LOCATION = "D:\\code\\cafe-management-system\\bill";
 }

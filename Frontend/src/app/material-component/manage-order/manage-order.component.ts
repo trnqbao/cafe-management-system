@@ -5,6 +5,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { BillService } from 'src/app/services/bill.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
+import { RevenueService } from 'src/app/services/revenue.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstant } from 'src/app/shared/global-constants';
 
@@ -29,6 +30,7 @@ export class ManageOrderComponent implements OnInit {
     private productService: ProductService,
     private snackbarService: SnackbarService,
     private billService: BillService,
+    private revenueService: RevenueService,
     private ngxService: NgxUiLoaderService
   ) { }
 
@@ -129,16 +131,53 @@ export class ManageOrderComponent implements OnInit {
     }
   }
 
-  add() {
+  add_v1() {
     var formData = this.manageOrderForm.value;
     var productName = this.dataSource.find((e: { id: number }) => e.id === formData.product.id);
     if (productName === undefined) {
       this.totalAmount = this.totalAmount + formData.total;
       this.dataSource.push({ id: formData.product.id, name: formData.product.name, category: formData.category.name, quantity: formData.quantity, price: formData.price, total: formData.total });
       this.dataSource = [...this.dataSource];
+      console.log(this.dataSource);
+
+      for (let i = 0; i < this.dataSource.length; i++) {
+        console.log(i + ": " + this.dataSource[i].name)
+      }
+
+      
+      this.snackbarService.openSnackBar(GlobalConstant.productAdded, "success");
+    } else if (this.dataSource.some((item: any) => item.name == productName)) {
+        console.log("yes")
+    } 
+    //   else {
+    //   this.snackbarService.openSnackBar(GlobalConstant.productExistError, GlobalConstant.error);
+    // }
+
+
+  }
+
+  add() {
+    const formData = this.manageOrderForm.value;
+  
+    const existingProduct = this.dataSource.find((e: { id: number }) => e.id === formData.product.id);
+    // const formatter = new Intl.NumberFormat('vi-VN', {
+    //   style: 'currency',
+    //   currency: 'VND'
+    // });
+
+    if (!existingProduct) {
+      this.totalAmount = this.totalAmount + formData.total;
+      this.dataSource.push({ id: formData.product.id, name: formData.product.name, category: formData.category.name, quantity: formData.quantity, price: formData.price, total: formData.total });
+      this.dataSource = [...this.dataSource];
       this.snackbarService.openSnackBar(GlobalConstant.productAdded, "success");
     } else {
-      this.snackbarService.openSnackBar(GlobalConstant.productExistError, GlobalConstant.error);
+ 
+      existingProduct.quantity = parseInt(formData.quantity, 10) + parseInt(existingProduct.quantity, 10);
+      existingProduct.total = existingProduct.quantity * existingProduct.price;
+      existingProduct.quantity = existingProduct.quantity.toString();
+      this.totalAmount = this.totalAmount + formData.total;
+      this.dataSource = [...this.dataSource];
+      this.snackbarService.openSnackBar(GlobalConstant.productQuantityUpdated, "success");
     }
   }
 
@@ -162,6 +201,16 @@ export class ManageOrderComponent implements OnInit {
     this.ngxService.start();
     this.billService.generateReport(data).subscribe((res: any) => {
       this.downloadFile(res?.uuid);
+      console.log(this.dataSource);
+      for (let i = 0; i < this.dataSource.length; i++) {
+        var data = {
+          productName: this.dataSource[i].name,
+          quantity: this.dataSource[i].quantity,
+          total: this.dataSource[i].total
+        }
+        this.revenueService.add(data).subscribe();
+      }
+
       this.manageOrderForm.reset();
       this.dataSource = [];
       this.totalAmount = 0;
@@ -173,6 +222,8 @@ export class ManageOrderComponent implements OnInit {
       }
       this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
     })
+
+    
   }
 
   downloadFile(fileName: string) {

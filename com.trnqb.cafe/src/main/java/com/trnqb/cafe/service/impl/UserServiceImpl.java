@@ -3,8 +3,8 @@ package com.trnqb.cafe.service.impl;
 
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.UserDTO;
-import com.trnqb.cafe.entities.Role;
-import com.trnqb.cafe.entities.User;
+import com.trnqb.cafe.dto.Role;
+import com.trnqb.cafe.entity.User;
 import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.UserRepository;
 import com.trnqb.cafe.service.UserService;
@@ -14,6 +14,7 @@ import com.trnqb.cafe.utils.EmailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final EmailUtils emailUtils;
     private final JwtFilter jwtFilter;
+    private final PasswordEncoder passwordEncoder;
 //    @Getter
 //    private com.trnqb.cafe.entities.User userDetails;
 
@@ -40,8 +42,42 @@ public class UserServiceImpl implements UserService {
 //    }
 
     @Override
-    public ResponseEntity<String> signUp(Map<String, String> requestMap) {
-        return null;
+    public ResponseEntity<String> signup(Map<String, String> requestMap) {
+        try {
+            if (validateSignUp(requestMap)) {
+                System.out.println("ValidateSignUp worked!");
+                User user = userRepository.findByEmail(requestMap.get("email"));
+
+                if (Objects.isNull(user)) {
+                    userRepository.save(getUserFromRequest(requestMap));
+                    return CafeUtils.getResponseEntity(CafeConstants.REGISTERED, HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity(CafeConstants.EXISTED_EMAIL, HttpStatus.BAD_REQUEST);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private User getUserFromRequest(Map<String, String> requestMap) {
+        User user = new User();
+        user.setName(requestMap.get("name"));
+        user.setEmail(requestMap.get("email"));
+        user.setPhoneNumber(requestMap.get("phoneNumber"));
+        user.setPassword(passwordEncoder.encode(requestMap.get("password")));
+        user.setRole(Role.USER);
+        user.setStatus("false");
+        return user;
+    }
+
+    private boolean validateSignUp(Map<String, String> requestMap) {
+        if (requestMap.containsKey("name") && requestMap.containsKey("email") && requestMap.containsKey("phoneNumber") && requestMap.containsKey("password")) {
+            return true;
+        }
+        return false;
     }
 
     @Override

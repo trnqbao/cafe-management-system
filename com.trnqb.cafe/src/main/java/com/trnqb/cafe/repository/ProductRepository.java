@@ -1,7 +1,6 @@
 package com.trnqb.cafe.repository;
 
-import com.trnqb.cafe.dto.ProductDTO;
-import com.trnqb.cafe.entities.Product;
+import com.trnqb.cafe.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Transactional
     @Modifying
-    Integer updateProductStatus(@Param("status") String status,@Param("id") int id);
+    Integer updateProductStatus(@Param("status") String status, @Param("id") int id);
 
     List<Product> findAllByCategoryIdAndStatus(Integer id, String status);
 

@@ -1,4 +1,4 @@
-package com.trnqb.cafe.entities;
+package com.trnqb.cafe.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @DynamicUpdate
@@ -45,5 +46,8 @@ public class Bill implements Serializable {
 
     @Column(name = "createdBy")
     private String createBy;
+
+    @Column(name = "date")
+    private Date date;
 
 }

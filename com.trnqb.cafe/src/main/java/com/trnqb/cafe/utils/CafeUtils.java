@@ -19,7 +19,7 @@ public class CafeUtils {
     }
 
     public static ResponseEntity<String> getResponseEntity(String res, HttpStatus httpStatus) {
-        return new ResponseEntity<String>("{\"message\": \""+ res +"\"}", httpStatus);
+        return new ResponseEntity<String>("{\"message\": \"" + res + "\"}", httpStatus);
     }
 
     public static String getUUID() {
@@ -34,7 +34,8 @@ public class CafeUtils {
 
     public static Map<String, Object> getMapFromJson(String data) {
         if (!Strings.isNullOrEmpty(data)) {
-            return new Gson().fromJson(data, new TypeToken<Map<String, Object>>() {}.getType());
+            return new Gson().fromJson(data, new TypeToken<Map<String, Object>>() {
+            }.getType());
         }
         return new HashMap<>();
     }

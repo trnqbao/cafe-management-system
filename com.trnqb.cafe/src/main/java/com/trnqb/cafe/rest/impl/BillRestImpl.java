@@ -1,7 +1,7 @@
 package com.trnqb.cafe.rest.impl;
 
 import com.trnqb.cafe.constants.CafeConstants;
-import com.trnqb.cafe.entities.Bill;
+import com.trnqb.cafe.dto.BillDTO;
 import com.trnqb.cafe.rest.BillRest;
 import com.trnqb.cafe.service.BillService;
 import com.trnqb.cafe.utils.CafeUtils;
@@ -30,7 +30,7 @@ public class BillRestImpl implements BillRest {
     }
 
     @Override
-    public ResponseEntity<List<Bill>> getBills() {
+    public ResponseEntity<List<BillDTO>> getBills() {
         try {
             return billService.getBills();
         } catch (Exception e) {

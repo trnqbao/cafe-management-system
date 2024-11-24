@@ -1,7 +1,7 @@
 package com.trnqb.cafe.rest.impl;
 
 import com.trnqb.cafe.constants.CafeConstants;
-import com.trnqb.cafe.entities.Category;
+import com.trnqb.cafe.dto.CategoryDTO;
 import com.trnqb.cafe.rest.CategoryRest;
 import com.trnqb.cafe.service.CategoryService;
 import com.trnqb.cafe.utils.CafeUtils;
@@ -30,7 +30,7 @@ public class CategoryRestImpl implements CategoryRest {
     }
 
     @Override
-    public ResponseEntity<List<Category>> getAllCategory(String filterValue) {
+    public ResponseEntity<List<CategoryDTO>> getAllCategory(String filterValue) {
         try {
             return categoryService.getAllCategory(filterValue);
         } catch (Exception e) {

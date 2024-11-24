@@ -18,6 +18,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BillRepository billRepository;
+
     @Override
     public ResponseEntity<Map<String, Object>> getCount() {
         Map<String, Object> map = new HashMap<>();

@@ -1,4 +1,5 @@
 package com.trnqb.cafe.rest;
+
 import com.trnqb.cafe.dto.JwtAuthenticationResponse;
 import com.trnqb.cafe.dto.RefreshTokenRequest;
 import com.trnqb.cafe.dto.SignInRequest;
@@ -12,12 +13,13 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:4200")
 public interface AuthenticationRest {
     @PostMapping(path = "/signup")
-    ResponseEntity<String> signup(@RequestBody SignUpRequest signUpRequest);
+    ResponseEntity<String> signup(@RequestBody Map<String, String> requestMap);
 
     @PostMapping(path = "/login")
-    ResponseEntity<String> login(@RequestBody SignInRequest signInRequest);
+    ResponseEntity<String> login(@RequestBody Map<String, String> requestMap);
 
-    @PostMapping(path = "/refresh") ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest);
+    @PostMapping(path = "/refresh")
+    ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest);
 
     @GetMapping(path = "/hello")
     ResponseEntity<String> hello();

@@ -21,9 +21,9 @@ public class AuthenticationRestImpl implements AuthenticationRest {
     private final AuthenticationService authenticationService;
 
     @Override
-    public ResponseEntity<String> signup(SignUpRequest signUpRequest) {
+    public ResponseEntity<String> signup(Map<String, String> requestMap) {
         try {
-            return authenticationService.signup(signUpRequest);
+            return authenticationService.signup(requestMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -31,9 +31,9 @@ public class AuthenticationRestImpl implements AuthenticationRest {
     }
 
     @Override
-    public ResponseEntity<String> login(SignInRequest signInRequest) {
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
         try {
-            return authenticationService.login(signInRequest);
+            return authenticationService.login(requestMap);
         } catch (Exception e) {
             e.printStackTrace();
         }

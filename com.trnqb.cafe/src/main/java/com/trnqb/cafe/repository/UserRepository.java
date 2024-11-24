@@ -1,7 +1,7 @@
 package com.trnqb.cafe.repository;
 
-import com.trnqb.cafe.entities.Role;
-import com.trnqb.cafe.entities.User;
+import com.trnqb.cafe.dto.Role;
+import com.trnqb.cafe.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
@@ -19,8 +19,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllByRole(Role role);
 
     List<String> getAllAdmin();
-
-    Role findRoleByEmail(String email);
 
     @Transactional
     @Modifying
