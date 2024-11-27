@@ -16,13 +16,13 @@ public interface RevenueRest {
     ResponseEntity<List<RevenueDTO>> getRevenues();
 
     @GetMapping(path = "/getDailyRevenue")
-    ResponseEntity<Integer> getDailyRevenue(@RequestParam(required = false) LocalDate date);
+    ResponseEntity<Map<String, Object>> getDailyRevenue(@RequestParam(required = false) LocalDate date);
 
     @GetMapping(path = "/getWeeklyRevenue")
     ResponseEntity<List<Map<String, Object>>> getWeeklyRevenue(@RequestParam(required = false) LocalDate date);
 
     @GetMapping(path = "/getMonthlyRevenue")
-    ResponseEntity<Integer> getMonthlyRevenue(@RequestParam int year, int month);
+    ResponseEntity<Map<String, Object>> getMonthlyRevenue();
 
     @GetMapping(path = "/getMonthlyPrediction")
     ResponseEntity<Integer> getMonthlyPrediction();

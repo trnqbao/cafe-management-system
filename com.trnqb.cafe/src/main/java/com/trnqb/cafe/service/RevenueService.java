@@ -15,9 +15,9 @@ public interface RevenueService {
 
     ResponseEntity<String> updateRevenue(Map<String, String> requestMap);
 
-    ResponseEntity<Integer> getDailyRevenue(LocalDate date);
+    ResponseEntity<Map<String, Object>> getDailyRevenue(LocalDate date);
 
-    ResponseEntity<Integer> getMonthlyRevenue(int month, int year);
+    ResponseEntity<Map<String, Object>> getMonthlyRevenue();
 
     ResponseEntity<List<Map<String, Object>>> getWeeklyRevenue(LocalDate date);
 

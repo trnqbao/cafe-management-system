@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class RevenueRestImpl implements RevenueRest {
     }
 
     @Override
-    public ResponseEntity<Integer> getDailyRevenue(LocalDate date) {
+    public ResponseEntity<Map<String, Object>> getDailyRevenue(LocalDate date) {
         try {
             return revenueService.getDailyRevenue(date);
         } catch (Exception e) {
@@ -50,9 +49,9 @@ public class RevenueRestImpl implements RevenueRest {
     }
 
     @Override
-    public ResponseEntity<Integer> getMonthlyRevenue(int year, int month) {
+    public ResponseEntity<Map<String, Object>> getMonthlyRevenue() {
         try {
-            return revenueService.getMonthlyRevenue(month, year);
+            return revenueService.getMonthlyRevenue();
         } catch (Exception e) {
             e.printStackTrace();
         }

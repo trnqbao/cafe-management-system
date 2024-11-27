@@ -1,1 +1,28 @@
-<p>manage-financial works!</p>
+<mat-card>
+  <b><span>Manage Revenue</span></b>
+</mat-card>
+
+<hr />
+
+<div class="row">
+  <div class="column">
+    <div class="card">
+      <div class="container">
+        <h2 class="title">Daily Revenue: {{ dailyRevenue }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <div class="container">
+        <h2 class="title">Monthly Revenue: {{ monthlyRevenue }}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <!-- <h2>Weekly Revenue</h2> -->
+  <canvas id="myChart"></canvas>
+</div>

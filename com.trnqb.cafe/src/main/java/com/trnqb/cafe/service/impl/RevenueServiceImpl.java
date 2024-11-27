@@ -62,12 +62,12 @@ public class RevenueServiceImpl implements RevenueService {
     }
 
     @Override
-    public ResponseEntity<Integer> getDailyRevenue(LocalDate date) {
+    public ResponseEntity<Map<String, Object>> getDailyRevenue(LocalDate date) {
         try {
             if (date != null) {
-                return new ResponseEntity<>(this.getRevenueByDay(date), HttpStatus.OK);
+                return new ResponseEntity<>(this.getRevenueByDay_v2(date), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(this.getRevenueByDay(LocalDate.now()), HttpStatus.OK);
+                return new ResponseEntity<>(this.getRevenueByDay_v2(LocalDate.now()), HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,11 +76,15 @@ public class RevenueServiceImpl implements RevenueService {
     }
 
     @Override
-    public ResponseEntity<Integer> getMonthlyRevenue(int month, int year) {
+    public ResponseEntity<Map<String, Object>> getMonthlyRevenue() {
         try {
+            LocalDate date = LocalDate.now();
+            Map<String, Object> map = new HashMap<>();
+            int year = date.getYear();
+            int month = date.getMonthValue();
             int total = revenueRepository.getMonthlyRevenue(month, year);
-            System.out.println(total);
-            return new ResponseEntity<>(total, HttpStatus.OK);
+            map.put("revenue", total);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,6 +145,17 @@ public class RevenueServiceImpl implements RevenueService {
                 total += revenue.getTotal();
         }
         return total;
+    }
+
+    private Map<String, Object> getRevenueByDay_v2(LocalDate date) {
+        int total = 0;
+        Map<String, Object> map = new HashMap<>();
+        List<RevenueDTO> revenues = revenueRepository.findAllByDate(date).stream().map(revenue -> mapToDTO(revenue, new RevenueDTO())).toList();
+        for (RevenueDTO revenue : revenues) {
+            total += revenue.getTotal();
+        }
+        map.put("revenue", total);
+        return map;
     }
 
     private List<Map<String, Object>> getWeeklyRevenueFrom(LocalDate date) {

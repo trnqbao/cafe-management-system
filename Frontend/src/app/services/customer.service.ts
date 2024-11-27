@@ -5,27 +5,19 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class RevenueService {
+export class CustomerService {
 
   url = environment.apiUrl;
 
   constructor(private httpClient: HttpClient) { }
 
   add(data: any) {
-    return this.httpClient.post(this.url + "/revenue/add", data, {
+    return this.httpClient.post(this.url + "/customer/add", data, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     })
   }
 
-  getDailyRevenue() {
-    return this.httpClient.get(this.url + "/revenue/getDailyRevenue")
-  }
-
-  getWeeklyRevenue() {
-    return this.httpClient.get(this.url + "/revenue/getWeeklyRevenue")
-  }
-
-  getMonthlyRevenue() {
-    return this.httpClient.get(this.url + "/revenue/getMonthlyRevenue")
+  getCustomers() {
+    return this.httpClient.get(this.url + "/customer/get");
   }
 }

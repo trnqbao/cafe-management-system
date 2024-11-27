@@ -26,5 +26,5 @@ public class CustomerDTO {
 
     private Boolean isDiscount;
 
-    private LocalDate latestDateOrder;
+    private LocalDate lastOrder;
 }

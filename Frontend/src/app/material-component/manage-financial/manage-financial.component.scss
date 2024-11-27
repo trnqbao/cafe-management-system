@@ -1,0 +1,19 @@
+.float-right {
+  float: right;
+}
+
+mat-card {
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+#myChart {
+  width: 100%; /* Allow width to adapt within the max-width */
+}
+
+canvas {
+  max-height: 800px;
+}

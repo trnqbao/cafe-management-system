@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 
+//@NamedQuery(name = "Customer.updateCustomerDiscount", query = "update Customer c set c.isDiscount=:isDiscount where c.id=:id")
 @Data
 @Entity
 @DynamicUpdate
@@ -33,6 +34,6 @@ public class Customer {
     @Column(name = "isDiscount")
     private Boolean isDiscount;
 
-    @Column(name = "latest_order")
-    private LocalDate latestDateOrder;
+    @Column(name = "last_order")
+    private LocalDate lastOrder;
 }

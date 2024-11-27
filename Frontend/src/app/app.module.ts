@@ -20,6 +20,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LoginComponent } from './login/login.component';
 import { TokenInterceptorInterceptor } from './services/token-interceptor.interceptor';
 import { RouteGuardService } from './services/route-guard.service';
+// import { ChartModule } from 'primeng/chart';
 
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
@@ -54,6 +55,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
+    // BrowserModule,
+    // ChartModule,
     SharedModule,
     HttpClientModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)

@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { BillService } from 'src/app/services/bill.service';
 import { CategoryService } from 'src/app/services/category.service';
+import { CustomerService } from 'src/app/services/customer.service';
 import { ProductService } from 'src/app/services/product.service';
 import { RevenueService } from 'src/app/services/revenue.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
@@ -31,6 +32,7 @@ export class ManageOrderComponent implements OnInit {
     private snackbarService: SnackbarService,
     private billService: BillService,
     private revenueService: RevenueService,
+    private customerService: CustomerService,
     private ngxService: NgxUiLoaderService
   ) { }
 
@@ -144,11 +146,11 @@ export class ManageOrderComponent implements OnInit {
         console.log(i + ": " + this.dataSource[i].name)
       }
 
-      
+
       this.snackbarService.openSnackBar(GlobalConstant.productAdded, "success");
     } else if (this.dataSource.some((item: any) => item.name == productName)) {
-        console.log("yes")
-    } 
+      console.log("yes")
+    }
     //   else {
     //   this.snackbarService.openSnackBar(GlobalConstant.productExistError, GlobalConstant.error);
     // }
@@ -158,7 +160,7 @@ export class ManageOrderComponent implements OnInit {
 
   add() {
     const formData = this.manageOrderForm.value;
-  
+
     const existingProduct = this.dataSource.find((e: { id: number }) => e.id === formData.product.id);
     // const formatter = new Intl.NumberFormat('vi-VN', {
     //   style: 'currency',
@@ -171,7 +173,7 @@ export class ManageOrderComponent implements OnInit {
       this.dataSource = [...this.dataSource];
       this.snackbarService.openSnackBar(GlobalConstant.productAdded, "success");
     } else {
- 
+
       existingProduct.quantity = parseInt(formData.quantity, 10) + parseInt(existingProduct.quantity, 10);
       existingProduct.total = existingProduct.quantity * existingProduct.price;
       existingProduct.quantity = existingProduct.quantity.toString();
@@ -202,15 +204,28 @@ export class ManageOrderComponent implements OnInit {
     this.billService.generateReport(data).subscribe((res: any) => {
       this.downloadFile(res?.uuid);
       console.log(this.dataSource);
+      let total_quantity: number = 0;
       for (let i = 0; i < this.dataSource.length; i++) {
-        var data = {
+
+        var product_data = {
           productName: this.dataSource[i].name,
           quantity: this.dataSource[i].quantity,
           total: this.dataSource[i].total
         }
-        this.revenueService.add(data).subscribe();
+        total_quantity += Number(product_data.quantity);
+
+        this.revenueService.add(product_data).subscribe();
       }
 
+      var customer_data = {
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        point: total_quantity
+      }
+
+      console.log(customer_data);
+      this.customerService.add(customer_data).subscribe();
       this.manageOrderForm.reset();
       this.dataSource = [];
       this.totalAmount = 0;
@@ -223,7 +238,7 @@ export class ManageOrderComponent implements OnInit {
       this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
     })
 
-    
+
   }
 
   downloadFile(fileName: string) {

@@ -49,11 +49,11 @@ public class BillServiceImpl implements BillService {
                         + "Email: " + requestMap.get("email") + "\n"
                         + "Payment Method: " + requestMap.get("paymentMethod");
 
-                Map<String, String> customerInfo = new HashMap<>();
-                customerInfo.put("name", (String) requestMap.get("name"));
-                customerInfo.put("email", (String) requestMap.get("email"));
-                customerInfo.put("phoneNumber", (String) requestMap.get("phoneNumber"));
-                customerService.addCustomer(customerInfo);
+//                Map<String, String> customerInfo = new HashMap<>();
+//                customerInfo.put("name", (String) requestMap.get("name"));
+//                customerInfo.put("email", (String) requestMap.get("email"));
+//                customerInfo.put("phoneNumber", (String) requestMap.get("phoneNumber"));
+//                customerService.addCustomer(customerInfo);
 
                 Document document = new Document();
                 PdfWriter.getInstance(document,
