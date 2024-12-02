@@ -3,6 +3,7 @@ package com.trnqb.cafe.service.impl;
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.CategoryDTO;
 import com.trnqb.cafe.dto.CustomerDTO;
+import com.trnqb.cafe.dto.ProductDTO;
 import com.trnqb.cafe.entity.Customer;
 import com.trnqb.cafe.entity.Product;
 import com.trnqb.cafe.jwt.JwtFilter;
@@ -46,7 +47,23 @@ public class CustomerServiceImpl implements CustomerService {
             if (validateCustomerMap(requestMap)) {
                 Customer customer = customerRepository.findByPhoneNumber(requestMap.get("phoneNumber"));
                 if (!Objects.isNull(customer)) {
+
+                    // Update point after use discount
+                    if (requestMap.get("discount").equals("5")) {
+                        customer.setPoint(customer.getPoint() - 5);
+                        System.out.println("HAHA: " + requestMap.get("discount"));
+                    } else {
+                        customer.setPoint(customer.getPoint() - 10);
+                        System.out.println("HAHA: " + requestMap.get("discount"));
+                    }
+
                     customer.setPoint(customer.getPoint() + Integer.parseInt(requestMap.get("point")));
+
+                    if (customer.getPoint() >= 5) {
+                        customer.setIsDiscount(true);
+                    } else {
+                        customer.setIsDiscount(false);
+                    }
                     if (!customer.getIsDiscount() && customer.getPoint() < 20)
                     customer.setLastOrder(LocalDate.now());
                     customerRepository.save(customer);
@@ -90,6 +107,23 @@ public class CustomerServiceImpl implements CustomerService {
             e.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<CustomerDTO> getCustomerByPhoneNumber(String phoneNumber) {
+        try {
+            Customer customer= customerRepository.findByPhoneNumber(phoneNumber);
+            if (!Objects.isNull(customer)) {
+                return new ResponseEntity<>(mapToDTO(customer, new CustomerDTO()), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(new CustomerDTO(), HttpStatus.OK);
+//            return new ResponseEntity<>(customerRepository
+//                    .findByPhoneNumber(phoneNumber).map(c -> mapToDTO(c, new CustomerDTO()))
+//                    .orElseThrow(() -> new RuntimeException("Customer not found by phone number")), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new CustomerDTO(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private CustomerDTO mapToDTO(Customer customer, CustomerDTO customerDTO) {

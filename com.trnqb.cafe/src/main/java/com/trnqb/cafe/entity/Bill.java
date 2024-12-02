@@ -9,6 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
+@NamedQuery(name = "Bill.findAllByDateRanges", query = "SELECT b FROM Bill b WHERE b.date >= :startDate AND b.date <= current_date")
 @Data
 @DynamicUpdate
 @DynamicInsert

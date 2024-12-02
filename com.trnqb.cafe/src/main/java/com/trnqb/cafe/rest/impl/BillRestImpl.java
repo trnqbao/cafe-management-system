@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,26 @@ public class BillRestImpl implements BillRest {
     public ResponseEntity<List<BillDTO>> getBills() {
         try {
             return billService.getBills();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<BillDTO>> getBillsByPayment(String payment) {
+        try {
+            return billService.getBillsByPayment(payment);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<BillDTO>> getBillsFrom(Date date) {
+        try {
+            return billService.getBillsFrom(date);
         } catch (Exception e) {
             e.printStackTrace();
         }

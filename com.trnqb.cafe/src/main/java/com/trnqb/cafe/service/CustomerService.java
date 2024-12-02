@@ -19,4 +19,6 @@ public interface CustomerService {
     ResponseEntity<String> updateCustomerDiscount(Map<String, String> requestMap);
 
     ResponseEntity<String> deleteCustomer(Integer id);
+
+    ResponseEntity<CustomerDTO> getCustomerByPhoneNumber(String phoneNumber);
 }

@@ -21,6 +21,8 @@ import { ManageBillComponent } from './manage-bill/manage-bill.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
 import { ManageCustomerComponent } from './manage-customer/manage-customer.component';
 import { ManageFinancialComponent } from './manage-financial/manage-financial.component';
+import { DailyRevenueComponent } from './dialog/daily-revenue/daily-revenue.component';
+import { ManageForecastComponent } from './manage-forecast/manage-forecast.component';
 
 @NgModule({
   imports: [
@@ -46,7 +48,9 @@ import { ManageFinancialComponent } from './manage-financial/manage-financial.co
     ManageBillComponent,
     ManageUserComponent,
     ManageCustomerComponent,
-    ManageFinancialComponent
+    ManageFinancialComponent,
+    DailyRevenueComponent,
+    ManageForecastComponent
   ]
 })
 export class MaterialComponentsModule { }

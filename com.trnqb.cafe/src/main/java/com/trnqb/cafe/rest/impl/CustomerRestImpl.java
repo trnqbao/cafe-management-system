@@ -39,6 +39,16 @@ public class CustomerRestImpl implements CustomerRest {
     }
 
     @Override
+    public ResponseEntity<CustomerDTO> getCustomerByPhoneNumber(String phoneNumber) {
+        try {
+            return customerService.getCustomerByPhoneNumber(phoneNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new CustomerDTO(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
     public ResponseEntity<String> addCustomer(Map<String, String> requestMap) {
         try {
             return customerService.addCustomer(requestMap);

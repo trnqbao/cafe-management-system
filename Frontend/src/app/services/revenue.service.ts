@@ -28,4 +28,8 @@ export class RevenueService {
   getMonthlyRevenue() {
     return this.httpClient.get(this.url + "/revenue/getMonthlyRevenue")
   }
+
+  getProductFrequencyLast7Days() {
+    return this.httpClient.get(this.url + "/revenue/getProductFrequencyLast7Days")
+  }
 }

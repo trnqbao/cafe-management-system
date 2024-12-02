@@ -7,9 +7,13 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 
- @NamedQuery(name = "Revenue.getMonthlyRevenue", query = "SELECT COALESCE (SUM(r.total), 0) FROM Revenue r WHERE YEAR(r.date) = :year AND MONTH(r.date) = :month")
-
-//@NamedQuery(name = "Revenue.findAllByMonthAndYear", query = "update Product p set p.status=:status where p.id=:id")
+@NamedQuery(name = "Revenue.getMonthlyRevenue", query = "SELECT COALESCE (SUM(r.total), 0) FROM Revenue r WHERE YEAR(r.date) = :year AND MONTH(r.date) = :month")
+@NamedQuery(name = "Revenue.findFrequentProductsLast7Days",
+        query = "SELECT p.productName, SUM(p.quantity) AS productCount " +
+                "FROM Revenue p " +
+                "WHERE p.date >= :startDate " +
+                "GROUP BY p.productName " +
+                "ORDER BY productCount DESC")
 @Data
 @DynamicUpdate
 @DynamicInsert

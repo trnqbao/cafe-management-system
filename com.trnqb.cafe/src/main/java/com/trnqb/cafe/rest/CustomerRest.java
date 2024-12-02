@@ -16,6 +16,9 @@ public interface CustomerRest {
     @GetMapping(path = "/getById/{id}")
     ResponseEntity<CustomerDTO> getCustomer(@PathVariable Integer id);
 
+    @GetMapping(path = "/getByPhoneNumber/{phoneNumber}")
+    ResponseEntity<CustomerDTO> getCustomerByPhoneNumber(@PathVariable String phoneNumber);
+
     @PostMapping(path = "/add")
     ResponseEntity<String> addCustomer(@RequestBody Map<String, String> requestMap);
 

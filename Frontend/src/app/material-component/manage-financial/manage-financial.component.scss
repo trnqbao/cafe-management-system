@@ -10,10 +10,180 @@ table {
   width: 100%;
 }
 
-#myChart {
-  width: 100%; /* Allow width to adapt within the max-width */
+
+.position-relative {
+  position: relative;
 }
 
+.add-contact {
+  position: absolute;
+  right: 17px;
+  top: 57px;
+}
+h3 {
+  font-size: small;
+  font-style: italic;
+  color: blue;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.column {
+  float: left;
+  width: 33.3%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin: 10px;
+}
+
+.about-section {
+  padding: 50px;
+  text-align: center;
+  background-color: #474e5d;
+  color: white;
+}
+
+.container {
+  padding: 0 16px;
+}
+
+.container::after,
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.title {
+  color: black;
+  text-align: center !important;
+}
+
+.button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #7b1fa2;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: #555;
+}
+
+@media screen and (max-width: 650px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+
 canvas {
-  max-height: 800px;
+  max-height: 600px;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#orderTimeChart {
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+#weeklyRevenueChart {
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.section1 {
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid #cbcbcb;
+  height: 50%; /* Horizontal line */
+}
+
+.section2 {
+  height: 50%;
+  padding-top: 20px;
+}
+
+.chart-right {
+  width: 35%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  // position: relative;
+}
+
+.chart-left {
+  border-right: 0.5px solid #cbcbcb; /* Vertical line */
+  width: 65%;
+  position: relative;
+}
+
+.top-drinks, .line-chart1, .line-chart2 {
+  width: 100% / 3;
+  position: relative;
+  height: 100%;
+}
+
+.line-chart1 {
+  border-right: 0.5px solid #cbcbcb; /* Vertical line */
+}
+.line-chart2 {
+  border-left: 0.5px solid #cbcbcb; /* Vertical line */
+}
+
+.white-bg {
+  background-color: white;
+}
+
+.p10 {
+  padding: 10px;
+}
+
+.chart-button {
+  // position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #7b1fa2;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
 }

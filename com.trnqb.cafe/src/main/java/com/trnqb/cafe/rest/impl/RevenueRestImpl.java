@@ -1,6 +1,7 @@
 package com.trnqb.cafe.rest.impl;
 
 import com.trnqb.cafe.constants.CafeConstants;
+import com.trnqb.cafe.dto.ProductCount;
 import com.trnqb.cafe.dto.RevenueDTO;
 import com.trnqb.cafe.rest.RevenueRest;
 import com.trnqb.cafe.service.RevenueService;
@@ -62,6 +63,16 @@ public class RevenueRestImpl implements RevenueRest {
     public ResponseEntity<Integer> getMonthlyPrediction() {
         try {
             return revenueService.getMonthlyPrediction();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Map<String, Object>>> getProductFrequencyLast7Days() {
+        try {
+            return revenueService.getProductFrequencyLast7Days();
         } catch (Exception e) {
             e.printStackTrace();
         }

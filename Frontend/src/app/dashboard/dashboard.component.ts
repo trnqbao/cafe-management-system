@@ -3,6 +3,7 @@ import { DashboardService } from '../services/dashboard.service';
 import { NgxUiLoaderRouterModule, NgxUiLoaderService } from 'ngx-ui-loader';
 import { SnackbarService } from '../services/snackbar.service';
 import { GlobalConstant } from '../shared/global-constants';
+
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
@@ -16,10 +17,12 @@ export class DashboardComponent implements AfterViewInit {
 	ngAfterViewInit() { }
 
 	constructor(private dashboardService: DashboardService,
+
 		private ngxService: NgxUiLoaderService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
 	) {
 		this.ngxService.start();
+		
 		this.dashboardData();
 	}
 
@@ -37,6 +40,7 @@ export class DashboardComponent implements AfterViewInit {
 			}
 			this.snackbarService.openSnackBar(this.responseMessage, GlobalConstant.error);
 		})
-	}
 
+		
+	}
 }

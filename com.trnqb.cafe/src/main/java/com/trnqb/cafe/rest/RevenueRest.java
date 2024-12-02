@@ -1,5 +1,6 @@
 package com.trnqb.cafe.rest;
 
+import com.trnqb.cafe.dto.ProductCount;
 import com.trnqb.cafe.dto.RevenueDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public interface RevenueRest {
 
     @GetMapping(path = "/getMonthlyPrediction")
     ResponseEntity<Integer> getMonthlyPrediction();
+
+    @GetMapping(path = "/getProductFrequencyLast7Days")
+    ResponseEntity<List<Map<String, Object>>> getProductFrequencyLast7Days();
 
 
     @PostMapping(path = "/add")

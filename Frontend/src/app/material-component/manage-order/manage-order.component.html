@@ -16,9 +16,9 @@
   <form [formGroup]="manageOrderForm">
     <div fxFlex fxLayout="column">
       <div fxLayout="row wrap">
-        <mat-form-field appearance="standard" fxFlex>
+        <mat-form-field appearance="fill" fxFlex>
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" required />
+          <input matInput [(ngModel)]="customerInfo.name" formControlName="name" required (input)="onNameChange()"/>
           <mat-error
             *ngIf="
               manageOrderForm.controls.name.touched &&
@@ -34,9 +34,9 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="standard" fxFlex>
+        <mat-form-field appearance="fill" fxFlex>
           <mat-label>Email</mat-label>
-          <input matInput formControlName="email" required />
+          <input matInput [(ngModel)]="customerInfo.email" formControlName="email" required  (input)="onEmailChange()"/>
           <mat-error
             *ngIf="
               manageOrderForm.controls.email.touched &&
@@ -52,9 +52,10 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="standard" fxFlex>
+        <mat-form-field appearance="fill" fxFlex>
           <mat-label>Phone Number</mat-label>
-          <input matInput formControlName="phoneNumber" required />
+          <input matInput formControlName="phoneNumber" [(ngModel)]="phoneNumber" required (blur)="onPhoneNumberChange()" />
+          
           <mat-error
             *ngIf="
               manageOrderForm.controls.phoneNumber.touched &&
@@ -68,6 +69,20 @@
               >This field is invalid.</span
             >
           </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Point</mat-label>
+          <input matInput [(ngModel)]="customerInfo.point" formControlName="point" readonly/>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Discount</mat-label>
+          <mat-select formControlName="discount" [(ngModel)]="selectedDiscount">
+            <mat-option *ngFor="let discount of discounts" [value]="discount.value">
+              {{ discount.label }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="standard" fxFlex>

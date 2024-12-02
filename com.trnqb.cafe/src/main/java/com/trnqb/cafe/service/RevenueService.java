@@ -1,5 +1,6 @@
 package com.trnqb.cafe.service;
 
+import com.trnqb.cafe.dto.ProductCount;
 import com.trnqb.cafe.dto.RevenueDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -22,4 +23,6 @@ public interface RevenueService {
     ResponseEntity<List<Map<String, Object>>> getWeeklyRevenue(LocalDate date);
 
     ResponseEntity<Integer> getMonthlyPrediction();
+
+    ResponseEntity<List<Map<String, Object>>> getProductFrequencyLast7Days();
 }

@@ -20,4 +20,8 @@ export class CustomerService {
   getCustomers() {
     return this.httpClient.get(this.url + "/customer/get");
   }
+
+  getCustomerByPhoneNumber(phoneNumber: any) {
+    return this.httpClient.get(this.url + "/customer/getByPhoneNumber/" + phoneNumber);
+  }
 }

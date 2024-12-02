@@ -114,6 +114,26 @@ public class RevenueServiceImpl implements RevenueService {
         return null;
     }
 
+    @Override
+    public ResponseEntity<List<Map<String, Object>>> getProductFrequencyLast7Days() {
+
+        try {
+            List<Map<String, Object>> productCount = new ArrayList<>();
+            List<Object[]> objects = revenueRepository.findFrequentProductsLast7Days(LocalDate.now().minusDays(7));
+            for (int i = 0; i < 5; i++) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("product", String.valueOf(objects.get(i)[0]));
+                map.put("count", Integer.parseInt(objects.get(i)[1].toString()));
+                productCount.add(map);
+            }
+            return new ResponseEntity<>(productCount, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     private Revenue mapToEntity(Map<String, String> requestMap) {
         Revenue revenue = new Revenue();
         revenue.setProductName(requestMap.get("productName"));

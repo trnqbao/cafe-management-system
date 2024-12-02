@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
-    private final CustomerService customerService;
     private final JwtFilter jwtFilter;
 
     @Override
@@ -156,6 +155,26 @@ public class BillServiceImpl implements BillService {
         return null;
     }
 
+    @Override
+    public ResponseEntity<List<BillDTO>> getBillsFrom(Date date) {
+        List<BillDTO> billDTOS = billRepository.findAllByDateRanges(date).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+        for (BillDTO billDTO : billDTOS) {
+            System.out.println(billDTO.getDate().getTime());
+
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<BillDTO>> getBillsByPayment(String payment) {
+        List<BillDTO> billDTOS = billRepository.findAllByPaymentMethod(payment).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+        for (BillDTO billDTO : billDTOS) {
+            System.out.println(billDTO.getDate());
+
+        }
+        return new ResponseEntity<>(billDTOS, HttpStatus.OK);
+    }
+
     private byte[] getByteArray(String filePath) throws Exception {
         File init = new File(filePath);
         InputStream targetStream = new FileInputStream(init);
@@ -232,10 +251,7 @@ public class BillServiceImpl implements BillService {
     }
 
     private boolean validateRequestMap(Map<String, Object> requestMap) {
-        return requestMap.containsKey("name") &&
-                requestMap.containsKey("phoneNumber") &&
-                requestMap.containsKey("email") &&
-                requestMap.containsKey("paymentMethod") &&
+        return requestMap.containsKey("paymentMethod") &&
                 requestMap.containsKey("productDetails") &&
                 requestMap.containsKey("totalAmount");
     }

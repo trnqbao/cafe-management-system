@@ -25,6 +25,18 @@ export class ManageOrderComponent implements OnInit {
   price: any;
   totalAmount: number = 0;
   responseMessage: any;
+  customerInfo = {
+    phoneNumber: '',
+    name: '',
+    email: '',
+    point: 0,
+    discount: ''
+    // ... other fields
+  };
+  phoneNumber: string = '';
+  selectedDiscount: string = '';
+  discounts: { value: string; label: string }[] = [];
+  
 
   constructor(private formBuilder: FormBuilder,
     private categoryService: CategoryService,
@@ -45,11 +57,14 @@ export class ManageOrderComponent implements OnInit {
       phoneNumber: [null, [Validators.required, Validators.pattern(GlobalConstant.phoneNumberRegex)]],
       paymentMethod: [null, [Validators.required]],
       product: [null, [Validators.required]],
+      point: [null],
+      discount: [null],
       category: [null, [Validators.required]],
       quantity: [null, [Validators.required]],
       price: [null, [Validators.required]],
       total: [null, [Validators.required]]
     });
+    
   }
 
   getCategories() {
@@ -133,39 +148,12 @@ export class ManageOrderComponent implements OnInit {
     }
   }
 
-  add_v1() {
-    var formData = this.manageOrderForm.value;
-    var productName = this.dataSource.find((e: { id: number }) => e.id === formData.product.id);
-    if (productName === undefined) {
-      this.totalAmount = this.totalAmount + formData.total;
-      this.dataSource.push({ id: formData.product.id, name: formData.product.name, category: formData.category.name, quantity: formData.quantity, price: formData.price, total: formData.total });
-      this.dataSource = [...this.dataSource];
-      console.log(this.dataSource);
-
-      for (let i = 0; i < this.dataSource.length; i++) {
-        console.log(i + ": " + this.dataSource[i].name)
-      }
-
-
-      this.snackbarService.openSnackBar(GlobalConstant.productAdded, "success");
-    } else if (this.dataSource.some((item: any) => item.name == productName)) {
-      console.log("yes")
-    }
-    //   else {
-    //   this.snackbarService.openSnackBar(GlobalConstant.productExistError, GlobalConstant.error);
-    // }
-
-
-  }
+  
 
   add() {
     const formData = this.manageOrderForm.value;
 
     const existingProduct = this.dataSource.find((e: { id: number }) => e.id === formData.product.id);
-    // const formatter = new Intl.NumberFormat('vi-VN', {
-    //   style: 'currency',
-    //   currency: 'VND'
-    // });
 
     if (!existingProduct) {
       this.totalAmount = this.totalAmount + formData.total;
@@ -206,26 +194,27 @@ export class ManageOrderComponent implements OnInit {
       console.log(this.dataSource);
       let total_quantity: number = 0;
       for (let i = 0; i < this.dataSource.length; i++) {
-
         var product_data = {
           productName: this.dataSource[i].name,
           quantity: this.dataSource[i].quantity,
           total: this.dataSource[i].total
         }
         total_quantity += Number(product_data.quantity);
-
         this.revenueService.add(product_data).subscribe();
       }
 
-      var customer_data = {
-        name: formData.name,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        point: total_quantity
+
+      if (data.name && data.email  && data.phoneNumber) {
+        var customer_data = {
+          name: formData.name,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          point: total_quantity,
+          discount: formData.discount
+        }
+        this.customerService.add(customer_data).subscribe();
       }
 
-      console.log(customer_data);
-      this.customerService.add(customer_data).subscribe();
       this.manageOrderForm.reset();
       this.dataSource = [];
       this.totalAmount = 0;
@@ -250,6 +239,39 @@ export class ManageOrderComponent implements OnInit {
       saveAs(res, fileName + ".pdf");
       this.ngxService.stop();
     })
+  }
+
+  onPhoneNumberChange() {
+    if (this.phoneNumber.length !== 10) {
+      return;
+    }
+    
+    if (!this.customerInfo.name && !this.customerInfo.email) {
+      this.customerService.getCustomerByPhoneNumber(this.phoneNumber).subscribe((res: any) => {
+        this.customerInfo = res;
+        console.log(this.customerInfo)
+        if (this.customerInfo.point >= 5 && this.customerInfo.point <= 10) {
+          this.discounts.push({ value: '5', label: 'Free 1 Cafe' });
+        } else if (this.customerInfo.point >= 10) {
+          this.discounts.push({ value: '10', label: 'Free 1 Tea/Juice' });
+        }
+      })
+    }
+
+  }
+
+  onNameChange() {
+    this.updateDiscountsAndPoint();
+  }
+
+  onEmailChange() {
+    this.updateDiscountsAndPoint();
+  }
+
+
+  updateDiscountsAndPoint() {
+    this.customerInfo.point = 0;
+    this.discounts = [];
   }
 
 }

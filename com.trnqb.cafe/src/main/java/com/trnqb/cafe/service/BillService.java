@@ -17,4 +17,8 @@ public interface BillService {
     ResponseEntity<byte[]> getPdf(Map<String, Object> requestMap);
 
     ResponseEntity<Integer> getDailyRevenue(Date date);
+
+    ResponseEntity<List<BillDTO>> getBillsFrom(Date date);
+
+    ResponseEntity<List<BillDTO>> getBillsByPayment(String payment);
 }
