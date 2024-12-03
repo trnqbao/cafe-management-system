@@ -18,6 +18,7 @@ _A user-friendly application designed to streamline cafe operations._
 2. Navigate to the Frontend Directory: `cd Frontend`
 3. Install Dependencies: `npm install`
 4. Start the Development Server: `ng serve`
+5. Access to website: `http://localhost:4200`
 
 
 ## Backend Setup:
