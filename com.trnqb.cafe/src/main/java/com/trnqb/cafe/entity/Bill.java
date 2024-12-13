@@ -7,6 +7,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 @NamedQuery(name = "Bill.findAllByDateRanges", query = "SELECT b FROM Bill b WHERE b.date >= :startDate AND b.date <= current_date")
@@ -48,7 +51,16 @@ public class Bill implements Serializable {
     @Column(name = "createdBy")
     private String createBy;
 
+//    @Column(name = "date_time")
+//    private LocalDateTime dateTime;
+
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
+
+    @Column(name = "time")
+    private LocalTime time;
+
+    @Column(name = "shiftTime")
+    private String shiftTime;
 
 }

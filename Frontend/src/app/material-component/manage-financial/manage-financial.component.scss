@@ -122,6 +122,8 @@ canvas {
   position: relative;
 }
 
+
+
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -135,7 +137,7 @@ canvas {
 
 .section2 {
   height: 50%;
-  padding-top: 20px;
+  padding-top: 17px;
 }
 
 .chart-right {
@@ -151,17 +153,19 @@ canvas {
   position: relative;
 }
 
-.top-drinks, .line-chart1, .line-chart2 {
-  width: 100% / 3;
-  position: relative;
-  height: 100%;
-}
+
 
 .line-chart1 {
-  border-right: 0.5px solid #cbcbcb; /* Vertical line */
-}
-.line-chart2 {
   border-left: 0.5px solid #cbcbcb; /* Vertical line */
+}
+
+.top-drinks {
+  padding-left: 20px;
+}
+
+#chart1 {
+  height: 200px;
+  
 }
 
 .white-bg {
@@ -186,4 +190,16 @@ canvas {
   cursor: pointer;
   width: 100%;
   font-weight: bold;
+}
+
+.section2 .row {
+  display: flex;
+}
+
+.section2 .column:first-child {
+  flex: 3; /* 3 parts */
+}
+
+.section2 .column:last-child {
+  flex: 7; /* 7 parts */
 }

@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js'
 
@@ -8,11 +9,13 @@ import { Chart, registerables } from 'chart.js'
 })
 export class ManageForecastComponent implements OnInit {
   forecastData = [
-    { date:   
- '2024-12-04', revenue: 1000000 },
-    { date: '2024-12-05', revenue: 1200000 },
-    // ... more forecast data points
-    { date: '2024-12-31', revenue: 2800000 }
+    { date: '2024-12-14', revenue: 1100000 },
+    { date: '2024-12-15', revenue: 1250000 },
+    { date: '2024-12-16', revenue: 1150000 },
+    { date: '2024-12-17', revenue: 1450000 },
+    { date: '2024-12-18', revenue: 1700000 },
+    { date: '2024-12-19', revenue: 1965000 },
+    { date: '2024-12-20', revenue: 1700000 }
   ];
 
   topDrinks: { product: string, frequency: number }[] = [
@@ -23,7 +26,7 @@ export class ManageForecastComponent implements OnInit {
     { product: 'Latte', frequency: 15 }
   ];
 
-  constructor() { Chart.register(...registerables)}
+  constructor() { Chart.register(...registerables) }
 
   ngOnInit(): void {
     this.loadCharts();
@@ -37,10 +40,18 @@ export class ManageForecastComponent implements OnInit {
   createForecastChart() {
     const ctx = document.getElementById('forecastChart') as HTMLCanvasElement;
 
+    const revenueValues = this.forecastData.map(data => data.revenue);
+    const min = Math.min(...revenueValues);
+    const max = Math.max(...revenueValues);
+
+    const dayNamesWithDates = this.forecastData.map(item => {
+			const dateObject = new Date(item.date);
+			return formatDate(dateObject, 'EEE - dd/MM', 'en-US');
+		});
     const chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.forecastData.map(data => data.date),
+        labels: dayNamesWithDates,
         datasets: [{
           label: 'Projected Revenue (VND)',
           data: this.forecastData.map(data => data.revenue),
@@ -51,12 +62,15 @@ export class ManageForecastComponent implements OnInit {
       options: {
         scales: {
           y: {
-            beginAtZero: true,
+            beginAtZero: false,
+        
             ticks: {
-              callback: function(value, index, values) {
-                return value.toLocaleString('vi-VN',   
- { style: 'currency', currency: 'VND'   
- });
+            
+              callback: function (value, index, values) {
+                return value.toLocaleString('vi-VN',
+                  {
+                    style: 'currency', currency: 'VND'
+                  });
               }
             }
           }
@@ -67,7 +81,7 @@ export class ManageForecastComponent implements OnInit {
 
   createTopDrinksChart() {
     const ctx = document.getElementById('topDrinksChart') as HTMLCanvasElement;
-  
+
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -79,8 +93,8 @@ export class ManageForecastComponent implements OnInit {
           borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1,
           barThickness: 'flex',
-					barPercentage: 0.5,
-					categoryPercentage: 0.9
+          barPercentage: 0.5,
+          categoryPercentage: 0.9
         }]
       },
       options: {
@@ -89,10 +103,10 @@ export class ManageForecastComponent implements OnInit {
           y: {
             beginAtZero: true,
             title: {
-							display: true,
-							text: 'Revenue (VND)'
-						}
-  
+              display: true,
+              text: 'Total ordered'
+            }
+
           }
         }
       }

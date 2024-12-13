@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class RevenueService {
+  
 
   url = environment.apiUrl;
 
@@ -21,6 +22,10 @@ export class RevenueService {
     return this.httpClient.get(this.url + "/revenue/getDailyRevenue")
   }
 
+  getDailyProducts() {
+    return this.httpClient.get(this.url + "/revenue/getDailyProducts")
+  }
+
   getWeeklyRevenue() {
     return this.httpClient.get(this.url + "/revenue/getWeeklyRevenue")
   }
@@ -29,7 +34,7 @@ export class RevenueService {
     return this.httpClient.get(this.url + "/revenue/getMonthlyRevenue")
   }
 
-  getProductFrequencyLast7Days() {
-    return this.httpClient.get(this.url + "/revenue/getProductFrequencyLast7Days")
+  getTopDrinksLast7Days() {
+	  return this.httpClient.get(this.url + "/revenue/getProductFrequencyLast7Days")
   }
 }

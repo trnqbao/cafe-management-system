@@ -11,7 +11,7 @@
         <div class="container">
           <h2 class="title">Daily Revenue: {{ dailyRevenue }}</h2>
           <p>
-            <button class="button">
+            <button class="button" (click)="handleViewAction()">
               View report
             </button>
           </p>
@@ -36,12 +36,10 @@
   <div class="dashboard-container p10">
     <div class="section1">
       <div class="chart-container">
-        <div class="chart-left">
-          
-        
-          
+        <div class="chart-left">   
           <canvas id="weeklyRevenueChart"></canvas>
         </div>
+
         <div class="chart-right">
           <canvas id="orderTimeChart"></canvas>
         </div>
@@ -50,11 +48,6 @@
   
     <div class="section2">
       <div class="row">
-        <div class="column">
-          <div class="line-chart1">
-            <canvas id="chart1"></canvas>
-          </div>
-        </div>
         <div class="column">
           <div class="top-drinks">
             <h2>Most Ordered Drink <h3>From {{last7days}}</h3></h2>
@@ -67,10 +60,16 @@
           </div>
         </div>
         <div class="column">
+          <div class="line-chart1">
+            <canvas id="chart1"></canvas>
+          </div>
+        </div>
+        
+        <!-- <div class="column">
           <div class="line-chart2">
             <canvas id="chart2"></canvas>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

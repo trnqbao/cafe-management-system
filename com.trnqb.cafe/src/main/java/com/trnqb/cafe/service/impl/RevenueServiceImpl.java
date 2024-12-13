@@ -3,6 +3,7 @@ package com.trnqb.cafe.service.impl;
 import com.trnqb.cafe.constants.CafeConstants;
 import com.trnqb.cafe.dto.RevenueDTO;
 import com.trnqb.cafe.entity.Revenue;
+import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.RevenueRepository;
 import com.trnqb.cafe.service.RevenueService;
 import com.trnqb.cafe.utils.CafeUtils;
@@ -17,7 +18,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class RevenueServiceImpl implements RevenueService {
-//    private final JwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
     private final RevenueRepository revenueRepository;
     @Override
     public ResponseEntity<List<RevenueDTO>> getRevenues() {
@@ -27,20 +28,6 @@ public class RevenueServiceImpl implements RevenueService {
                 .map(revenue -> mapToDTO(revenue, new RevenueDTO()))
                 .toList(), HttpStatus.OK);
     }
-
-//    @Override
-//    public ResponseEntity<String> addRevenue(Map<String, String> requestMap) {
-//        try {
-//            if (validateRevenueMap(requestMap)) {
-//                revenueRepository.save(mapToEntity(requestMap));
-//                return CafeUtils.getResponseEntity("Revenue has been added successfully", HttpStatus.OK);
-//            }
-//            return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return CafeUtils.getResponseEntity(CafeConstants.ST_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 
     @Override
     public ResponseEntity<String> updateRevenue(Map<String, String> requestMap) {
@@ -65,9 +52,23 @@ public class RevenueServiceImpl implements RevenueService {
     public ResponseEntity<Map<String, Object>> getDailyRevenue(LocalDate date) {
         try {
             if (date != null) {
-                return new ResponseEntity<>(this.getRevenueByDay_v2(date), HttpStatus.OK);
+                return new ResponseEntity<>(this.getRevenueByDay_v1(date), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(this.getRevenueByDay_v2(LocalDate.now()), HttpStatus.OK);
+                return new ResponseEntity<>(this.getRevenueByDay_v1(LocalDate.now()), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Map<String, Object>>> getDailyProducts(LocalDate date) {
+        try {
+            if (date != null) {
+                return new ResponseEntity<>(this.getDailyProductsByDate(date), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(this.getDailyProductsByDate(LocalDate.now()), HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,13 +79,15 @@ public class RevenueServiceImpl implements RevenueService {
     @Override
     public ResponseEntity<Map<String, Object>> getMonthlyRevenue() {
         try {
-            LocalDate date = LocalDate.now();
-            Map<String, Object> map = new HashMap<>();
-            int year = date.getYear();
-            int month = date.getMonthValue();
-            int total = revenueRepository.getMonthlyRevenue(month, year);
-            map.put("revenue", total);
-            return new ResponseEntity<>(map, HttpStatus.OK);
+            if (jwtFilter.isAdmin()) {
+                LocalDate date = LocalDate.now();
+                Map<String, Object> map = new HashMap<>();
+                int year = date.getYear();
+                int month = date.getMonthValue();
+                int total = revenueRepository.getMonthlyRevenue(month, year);
+                map.put("revenue", total);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,15 +170,29 @@ public class RevenueServiceImpl implements RevenueService {
         return total;
     }
 
-    private Map<String, Object> getRevenueByDay_v2(LocalDate date) {
+    private Map<String, Object> getRevenueByDay_v1(LocalDate date) {
         int total = 0;
         Map<String, Object> map = new HashMap<>();
         List<RevenueDTO> revenues = revenueRepository.findAllByDate(date).stream().map(revenue -> mapToDTO(revenue, new RevenueDTO())).toList();
         for (RevenueDTO revenue : revenues) {
             total += revenue.getTotal();
         }
+        map.put("date", date);
         map.put("revenue", total);
         return map;
+    }
+
+    private List<Map<String, Object>> getDailyProductsByDate(LocalDate date) {
+        List<Map<String, Object>> maps = new ArrayList<>();
+        List<RevenueDTO> revenues = revenueRepository.findAllByDate(date).stream().map(revenue -> mapToDTO(revenue, new RevenueDTO())).toList();
+
+        for (RevenueDTO revenue : revenues) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("product", revenue.getProductName());
+            map.put("quantity", revenue.getQuantity());
+            maps.add(map);
+        }
+        return maps;
     }
 
     private List<Map<String, Object>> getWeeklyRevenueFrom(LocalDate date) {
@@ -189,7 +206,6 @@ public class RevenueServiceImpl implements RevenueService {
             map.put("date", date.minusDays(i));
             map.put("revenue", lastTotal);
             mapList.add(map);
-
             total += lastTotal;
             System.out.println("Revenue at " + date.minusDays(i) + ": " + lastTotal);
         }

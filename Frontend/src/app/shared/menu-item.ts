@@ -16,8 +16,9 @@ const MENU_ITEMS = [
     { state: 'bill', name: 'Manage Bill', type: 'link', icon: 'backup_table', role: '' },
     { state: 'user', name: 'Manage User', type: 'link', icon: 'people', role: 'ADMIN' }, 
     { state: 'customer', name: 'Manage Customer', type: 'link', icon: 'people_outline', role: '' },
-    { state: 'revenue', name: 'Financial', type: 'link', icon: 'bar_chart', role: 'ADMIN' },
-    { state: 'forecast', name: 'Forecast', type: 'link', icon: 'insert_chart', role: 'ADMIN' }
+    { state: 'revenue', name: 'Accounting Report', type: 'link', icon: 'bar_chart', role: 'ADMIN' },
+    { state: 'forecast', name: 'Financial Forecasting', type: 'link', icon: 'insert_chart', role: 'ADMIN' },
+    { state: 'dailyRevenue', name: 'Report', type: 'link', icon: 'bar_chart', role: 'USER' }
 ]
 @Injectable()
 export class MenuItems {

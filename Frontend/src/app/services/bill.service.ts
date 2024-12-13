@@ -27,6 +27,14 @@ export class BillService {
     return this.httpClient.get(this.url + "/bill/getBills");
   }
 
+  getOrderTimeLast7Days() {
+    return this.httpClient.get(this.url + "/bill/getWeeklyOrderDistribution");
+  }
+
+  getTotalOrdersLast2Weeks() {
+    return this.httpClient.get(this.url + "/bill/getTotalOrderByDay");
+  }
+
   delete(id: any) {
     return this.httpClient.post(this.url + "/bill/delete/" + id, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')

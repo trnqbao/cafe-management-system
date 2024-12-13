@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +52,29 @@ public class BillRestImpl implements BillRest {
     }
 
     @Override
-    public ResponseEntity<List<BillDTO>> getBillsFrom(Date date) {
+    public ResponseEntity<List<BillDTO>> getBillsFrom(LocalDate date) {
         try {
             return billService.getBillsFrom(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Map<String, Object>>> getWeeklyOrderDistribution(LocalDate date) {
+        try {
+            return billService.getWeeklyOrderDistribution(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Map<String, Object>>> getTotalOrderByDay(LocalDate date) {
+        try {
+            return billService.getTotalOrdersByDay(date);
         } catch (Exception e) {
             e.printStackTrace();
         }

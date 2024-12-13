@@ -1,11 +1,9 @@
 package com.trnqb.cafe.service;
 
-import com.trnqb.cafe.dto.ProductCount;
 import com.trnqb.cafe.dto.RevenueDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +15,8 @@ public interface RevenueService {
     ResponseEntity<String> updateRevenue(Map<String, String> requestMap);
 
     ResponseEntity<Map<String, Object>> getDailyRevenue(LocalDate date);
+
+    ResponseEntity<List<Map<String, Object>>> getDailyProducts(LocalDate date);
 
     ResponseEntity<Map<String, Object>> getMonthlyRevenue();
 

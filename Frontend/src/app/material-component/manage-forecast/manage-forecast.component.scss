@@ -1,19 +1,30 @@
 .float-right {
-    float: right;
-  }
-  
-  mat-card {
-    padding: 20px;
-  }
-  
-  table {
-    width: 100%;
-  }
+  float: right;
+}
 
-  .white-bg {
-    background-color: white;
-  }
+mat-card {
+  padding: 20px;
+}
 
-  #forecastChart {
-    padding: 10px;
-  }
+table {
+  width: 100%;
+}
+
+.white-bg {
+  background-color: white;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#forecastChart, #topDrinksChart {
+  padding: 30px;
+  height: auto;
+  width: auto;
+}
+
+.chart-1 {
+  border-bottom: 0.5px solid #cbcbcb; /* Vertical line */
+}

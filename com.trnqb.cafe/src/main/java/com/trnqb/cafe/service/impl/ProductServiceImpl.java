@@ -65,6 +65,10 @@ public class ProductServiceImpl implements ProductService {
                     if (optional.isPresent()) {
                         Product product = mapToEntity(requestMap, true);
                         product.setStatus(optional.get().getStatus());
+                        if (requestMap.get("img") == null) {
+                            product.setImg(product.getImg());
+                        }
+
                         productRepository.save(product);
                         return CafeUtils.getResponseEntity("Product has been updated.", HttpStatus.OK);
                     } else {
@@ -155,6 +159,7 @@ public class ProductServiceImpl implements ProductService {
         productDTO.setStatus(product.getStatus());
         productDTO.setCategoryID(product.getCategory().getId());
         productDTO.setCategoryName(product.getCategory().getName());
+        productDTO.setImg(product.getImg());
         return productDTO;
     }
 
@@ -172,6 +177,12 @@ public class ProductServiceImpl implements ProductService {
         product.setName(requestMap.get("name"));
         product.setDescription(requestMap.get("description"));
         product.setPrice(Integer.parseInt(requestMap.get("price")));
+        if (requestMap.get("img") == null) {
+            product.setImg(CafeConstants.DEFAULT_IMG);
+        } else {
+            product.setImg(requestMap.get("img"));
+        }
+
         return product;
     }
 

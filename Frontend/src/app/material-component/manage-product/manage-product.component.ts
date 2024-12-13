@@ -18,9 +18,12 @@ export class ManageProductComponent implements OnInit {
 
   displayedColumns: string[] =
     ['name', 'category', 'description', 'price', 'edit'];
+    products: any[] = [];
   dataSource: any;
   // length1:any;
   responseMessage: any;
+  pageSize: number = 6;
+  defaultImg = 'assets/img/default-drink.png';
 
   constructor(private productService: ProductService,
     private ngxService: NgxUiLoaderService,
@@ -31,7 +34,19 @@ export class ManageProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.ngxService.start();
-    this.tableData();
+    this.getProducts();
+    // this.tableData();
+  }
+
+  getProducts() {
+    this.productService.getProducts().subscribe((res: any) => {
+      this.ngxService.stop();
+      this.products = res;
+    }, (error: any) => {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      // Handle error message
+    })
   }
 
   tableData() {
@@ -67,7 +82,8 @@ export class ManageProductComponent implements OnInit {
     });
 
     const sub = dialogRef.componentInstance.onAddProduct.subscribe((res) => {
-      this.tableData();
+      // this.tableData();
+      this.getProducts();
     })
   }
 
@@ -78,6 +94,8 @@ export class ManageProductComponent implements OnInit {
       data: productData
     };
 
+
+    // console.log(dialogConfig.data)
     dialogConfig.width = "850px";
     const dialogRef = this.dialog.open(ProductComponent, dialogConfig);
     this.router.events.subscribe(() => {
@@ -85,7 +103,8 @@ export class ManageProductComponent implements OnInit {
     });
 
     const sub = dialogRef.componentInstance.onEditProduct.subscribe((res) => {
-      this.tableData();
+      // this.tableData();
+      this.getProducts();
     })
   }
 
@@ -107,7 +126,8 @@ export class ManageProductComponent implements OnInit {
   deleteProduct(id: any) {
     this.productService.delete(id).subscribe((res: any) => {
       this.ngxService.stop();
-      this.tableData();
+      // this.tableData();
+      this.getProducts();
       this.responseMessage = res?.message;
       this.snackbarService.openSnackBar(this.responseMessage, "success");
     }, (error: any) => {

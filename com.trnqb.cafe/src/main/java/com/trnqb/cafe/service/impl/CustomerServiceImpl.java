@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
                     if (requestMap.get("discount").equals("5")) {
                         customer.setPoint(customer.getPoint() - 5);
                         System.out.println("HAHA: " + requestMap.get("discount"));
-                    } else {
+                    } else if (requestMap.get("discount").equals("10")){
                         customer.setPoint(customer.getPoint() - 10);
                         System.out.println("HAHA: " + requestMap.get("discount"));
                     }
@@ -61,8 +61,10 @@ public class CustomerServiceImpl implements CustomerService {
 
                     if (customer.getPoint() >= 5) {
                         customer.setIsDiscount(true);
+                        System.out.println("TRUE: " + customer.getPoint());
                     } else {
                         customer.setIsDiscount(false);
+                        System.out.println("FALSE: " + customer.getPoint());
                     }
                     if (!customer.getIsDiscount() && customer.getPoint() < 20)
                     customer.setLastOrder(LocalDate.now());

@@ -85,6 +85,17 @@
           </mat-error>
         </mat-form-field>
       </div>
+
+      <div fxLayout="row wrap">
+        <!-- <mat-form-field appearance="standard" fxFlex> -->
+          <!-- <mat-label>Image  </mat-label> -->
+          <input type="file" formControlName="img" (change)="handleImageUpload($event)"/>
+          <mat-hint>Supported formats: jpg, jpeg, png</mat-hint>
+           
+        <!-- </mat-form-field> -->
+        <img *ngIf="selectedImage" [src]="selectedImage" alt="Selected Product Image" style="width: 100px; height: auto; margin-top: 10px;">
+      </div>
+   
     </div>
   </form>
 </mat-dialog-content>

@@ -13,3 +13,34 @@ table {
 .hovered:hover {
   background-color: #f0f0f0;
 }
+
+.product-card {
+  width: 20%; /* Adjust width as needed */
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.product-container {
+  // display: flex;
+  // flex-wrap: wrap; /* Để các phần tử xuống dòng khi không đủ chỗ */
+  // justify-content: space-between; /* Căn chỉnh các phần tử cách đều nhau */
+}
+
+.product-card {
+  /* ... các style khác */
+  flex: 1; /* Để các phần tử có kích thước bằng nhau */
+  min-width: 200px; /* Đặt kích thước tối thiểu cho mỗi card */
+}
+
+.product-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* Adjust the number of columns as needed */
+  gap: 5px; /* Adjust the gap between cards */
+}
+
+.product-card {
+  /* ... other styles */
+  aspect-ratio: 1 / 1; /* Ensures equal width and height */
+}
+

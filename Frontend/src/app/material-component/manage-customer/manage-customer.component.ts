@@ -13,7 +13,7 @@ import { GlobalConstant } from 'src/app/shared/global-constants';
 export class ManageCustomerComponent implements OnInit {
 
   displayedColumns: string[] =
-    ['name', 'email', 'phoneNumber', 'point', 'lastOrder', 'isDiscount'];
+    ['name', 'email', 'phoneNumber', 'point', 'lastOrder'];
   dataSource: any;
   responseMessage: any;
 

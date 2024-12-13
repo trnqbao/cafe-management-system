@@ -4,6 +4,7 @@ import com.trnqb.cafe.dto.BillDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,13 @@ public interface BillRest {
     ResponseEntity<List<BillDTO>> getBillsByPayment(@PathVariable String payment);
 
     @GetMapping(path = "/getBillsFrom/{startDate}")
-    ResponseEntity<List<BillDTO>> getBillsFrom(@PathVariable Date startDate);
+    ResponseEntity<List<BillDTO>> getBillsFrom(@PathVariable LocalDate startDate);
+
+    @GetMapping(path = "/getWeeklyOrderDistribution")
+    ResponseEntity<List<Map<String, Object>>> getWeeklyOrderDistribution(@RequestParam(required = false) LocalDate date);
+
+    @GetMapping(path = "/getTotalOrderByDay")
+    ResponseEntity<List<Map<String, Object>>> getTotalOrderByDay(@PathVariable(required = false) LocalDate date);
 
     @PostMapping(path = "/getPdf")
     ResponseEntity<byte[]> getPdf(@RequestBody Map<String, Object> requestMap);

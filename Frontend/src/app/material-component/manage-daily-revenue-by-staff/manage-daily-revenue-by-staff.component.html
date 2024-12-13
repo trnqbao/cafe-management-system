@@ -1,0 +1,30 @@
+<mat-card>
+    <b><span>Manage Revenue</span></b>
+  </mat-card>
+  
+  <hr />
+  
+  <div class="white-bg">
+    <div class="row p10">
+      <div class="column">
+        <div class="card">
+          <div class="container">
+            <h2 class="title">Daily Revenue: {{ dailyRevenue }}</h2>
+            <p>
+              <!-- <button class="button" (click)="handleViewAction()">
+                View report
+              </button> -->
+            </p>
+          </div>
+        </div>
+      </div> 
+    </div>
+    
+    <div class="dashboard-container p10">
+        <div class="chart-container">
+            <canvas id="dailyProductsFrequency"></canvas>
+        </div>
+    </div>
+  </div>
+  
+  

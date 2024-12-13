@@ -1,5 +1,5 @@
 <mat-card>
-  <b><span>Manage Product</span></b>
+  <b><span>Manage Products</span></b>
   <button
     mat-flat-button
     color="primary"
@@ -20,67 +20,26 @@
 
 <hr />
 
-<div class="responsive_table">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-containter matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-    </ng-containter>
-
-    <ng-containter matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef>Category</th>
-      <td mat-cell *matCellDef="let element">{{ element.categoryName }}</td>
-    </ng-containter>
-
-    <ng-containter matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef>Description</th>
-      <td mat-cell *matCellDef="let element">{{ element.description }}</td>
-    </ng-containter>
-
-    <ng-containter matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef>Price</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.price | currency : "VND" : "" : "1.0-0" }}
-      </td>
-    </ng-containter>
-
-    <ng-containter matColumnDef="edit">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
-      <td mat-cell *matCellDef="let element" class="action-link">
-        <!-- edit product button -->
-        <button
-          mat-icon-button
-          color="primary"
-          matTooltip="Edit"
-          (click)="handleEditAction(element)"
-        >
+<div class="product-container ">
+  <div class="product-card" *ngFor="let product of products">
+    <mat-card class="card-hover">
+      <img mat-card-image [src]="product.img" alt="{{ product.name }}" style="width: 100px; height: 100px;">  <mat-card-content>
+        <p>{{ product.name }}</p>
+        <!-- <p class="product-description">{{ product.description }}</p> -->
+        <span class="price">{{ product.price | currency : "VND" : "" : "1.0-0" }} VND</span>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-icon-button color="primary" matTooltip="Edit" (click)="handleEditAction(product)">
           <mat-icon>edit</mat-icon>
         </button>
-
-        <!-- delete product button -->
-        <button
-          mat-icon-button
-          color="primary"
-          matTooltip="Delete"
-          (click)="handleDeleteAction(element)"
-        >
+        <button mat-icon-button color="warn" matTooltip="Delete" (click)="handleDeleteAction(product)">
           <mat-icon>delete</mat-icon>
         </button>
+        <mat-slide-toggle (change)="onChange($event.checked, product.id)" matTooltip="Activate or Deactivate Product" [checked]="product.status">
+        </mat-slide-toggle>
+      </mat-card-actions>
+    </mat-card>
 
-        <!-- lock/unlock product button -->
-        <mat-slide-toggle
-          (change)="onChange($event.checked, element.id)"
-          matTooltip="Activate or Deactivate Product"
-          [checked]="element.status"
-        ></mat-slide-toggle>
-      </td>
-    </ng-containter>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      class="hovered"
-    ></tr>
-  </table>
+    <!-- <div *ngIf="(i + 1) % pageSize === 0"></div> -->
+  </div>
 </div>

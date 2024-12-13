@@ -23,6 +23,7 @@ import { ManageCustomerComponent } from './manage-customer/manage-customer.compo
 import { ManageFinancialComponent } from './manage-financial/manage-financial.component';
 import { DailyRevenueComponent } from './dialog/daily-revenue/daily-revenue.component';
 import { ManageForecastComponent } from './manage-forecast/manage-forecast.component';
+import { ManageDailyRevenueByStaffComponent } from './manage-daily-revenue-by-staff/manage-daily-revenue-by-staff.component';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { ManageForecastComponent } from './manage-forecast/manage-forecast.compo
     ManageCustomerComponent,
     ManageFinancialComponent,
     DailyRevenueComponent,
-    ManageForecastComponent
+    ManageForecastComponent,
+    ManageDailyRevenueByStaffComponent
   ]
 })
 export class MaterialComponentsModule { }

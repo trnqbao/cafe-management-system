@@ -10,7 +10,6 @@ import com.trnqb.cafe.entity.Bill;
 import com.trnqb.cafe.jwt.JwtFilter;
 import com.trnqb.cafe.repository.BillRepository;
 import com.trnqb.cafe.service.BillService;
-import com.trnqb.cafe.service.CustomerService;
 import com.trnqb.cafe.utils.CafeUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.io.IOUtils;
@@ -20,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
@@ -96,10 +97,13 @@ public class BillServiceImpl implements BillService {
     @Override
     public ResponseEntity<List<BillDTO>> getBills() {
         List<BillDTO> bills;
+
+
         if (jwtFilter.isAdmin()) {
             bills = billRepository.findAll().stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
         } else {
             bills = billRepository.findAllByCreateBy(jwtFilter.getCurrentUser()).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();;
+
         }
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
@@ -146,33 +150,104 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public ResponseEntity<Integer> getDailyRevenue(Date date) {
-        Double total = (double) 0;
-        List<BillDTO> billDTOS = billRepository.findAllByDate(date).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
-        for (BillDTO billDTO : billDTOS) {
-            total += billDTO.getTotal().doubleValue();
+    public ResponseEntity<List<BillDTO>> getBillsFrom(LocalDate date) {
+        try {
+            List<BillDTO> billDTOS = billRepository.findAllByDate(date).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+            return new ResponseEntity<>(billDTOS, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<List<BillDTO>> getBillsFrom(Date date) {
-        List<BillDTO> billDTOS = billRepository.findAllByDateRanges(date).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
-        for (BillDTO billDTO : billDTOS) {
-            System.out.println(billDTO.getDate().getTime());
-
-        }
-        return null;
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     public ResponseEntity<List<BillDTO>> getBillsByPayment(String payment) {
-        List<BillDTO> billDTOS = billRepository.findAllByPaymentMethod(payment).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
-        for (BillDTO billDTO : billDTOS) {
-            System.out.println(billDTO.getDate());
-
+        try {
+            List<BillDTO> billDTOS = billRepository.findAllByPaymentMethod(payment).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+            return new ResponseEntity<>(billDTOS, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return new ResponseEntity<>(billDTOS, HttpStatus.OK);
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<Map<String, Object>>> getWeeklyOrderDistribution(LocalDate date) {
+        try {
+            List<BillDTO> billDTOs;
+            if (date == null) {
+                billDTOs = billRepository.findAllByDateRanges(LocalDate.now().minusDays(7)).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+            } else {
+                billDTOs = billRepository.findAllByDateRanges(LocalDate.now()).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+            }
+      
+            return new ResponseEntity<>(this.getOrderTimeData(billDTOs), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<Map<String, Object>>> getTotalOrdersByDay(LocalDate date) {
+        try {
+            if (date == null) {
+                return new ResponseEntity<>(this.getTotalOrdersLast2Weeks(LocalDate.now()), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(this.getTotalOrdersLast2Weeks(date), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private List<Map<String, Object>> getTotalOrdersLast2Weeks(LocalDate date) {
+        List<Map<String, Object>> maps = new ArrayList<>();
+        for (int i = 13; i >= 0; i--) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("date", date.minusDays(i));
+            map.put("total", this.getDailyTotalOrder(date.minusDays(i)));
+            maps.add(map);
+        }
+        return maps;
+    }
+
+    private Integer getDailyTotalOrder(LocalDate date) {
+        List<BillDTO> billDTOS = billRepository.findAllByDate(date).stream().map(bill -> mapToDTO(bill, new BillDTO())).toList();
+        return billDTOS.size();
+    }
+
+    private List<Map<String, Object>> getOrderTimeData(List<BillDTO> bills) {
+        List<Map<String, Object>> maps = new ArrayList<>();
+        Map<String, Integer> shiftCounts = new HashMap<>();
+        shiftCounts.put("Morning", 0);
+        shiftCounts.put("Afternoon", 0);
+        shiftCounts.put("Evening", 0);
+
+        for (BillDTO billDTO : bills) {
+            shiftCounts.compute(billDTO.getShiftTime(), (shift, count) -> count == null ? 1 : count + 1);
+        }
+
+        int morning = shiftCounts.get("Morning");
+        int afternoon = shiftCounts.get("Afternoon");
+        int evening = shiftCounts.get("Evening");
+
+        Map<String, Object> morningMap = new HashMap<>();
+        morningMap.put("shift", "Morning");
+        morningMap.put("orders", morning);
+
+        Map<String, Object> afternoonMap = new HashMap<>();
+        afternoonMap.put("shift", "Afternoon");
+        afternoonMap.put("orders", afternoon);
+
+        Map<String, Object> eveningMap = new HashMap<>();
+        eveningMap.put("shift", "Evening");
+        eveningMap.put("orders", evening);
+
+        maps.add(morningMap);
+        maps.add(afternoonMap);
+        maps.add(eveningMap);
+        return maps;
     }
 
     private byte[] getByteArray(String filePath) throws Exception {
@@ -202,6 +277,16 @@ public class BillServiceImpl implements BillService {
                     header.setVerticalAlignment(Element.ALIGN_CENTER);
                     table.addCell(header);
                 });
+    }
+
+    private String classifyTimeOfDay(LocalTime time) {
+        if (time.isAfter(LocalTime.of(0, 0)) && time.isBefore(LocalTime.of(12, 0))) {
+            return "Morning";
+        } else if (time.isAfter(LocalTime.of(12, 0)) && time.isBefore(LocalTime.of(17, 0))) {
+            return "Afternoon";
+        } else {
+            return "Evening";
+        }
     }
 
     private Font getFont(String type) {
@@ -243,7 +328,9 @@ public class BillServiceImpl implements BillService {
             bill.setTotal((Integer) requestMap.get("totalAmount"));
             bill.setProductDetails((String) requestMap.get("productDetails"));
             bill.setCreateBy(jwtFilter.getCurrentUser());
-            bill.setDate(new Date());
+            bill.setDate(LocalDate.now());
+            bill.setTime(LocalTime.now());
+            bill.setShiftTime(classifyTimeOfDay(bill.getTime()));
             billRepository.save(bill);
         } catch (Exception e) {
             e.printStackTrace();
@@ -266,7 +353,27 @@ public class BillServiceImpl implements BillService {
         billDTO.setTotal(bill.getTotal());
         billDTO.setProductDetails(bill.getProductDetails());
         billDTO.setCreateBy(bill.getCreateBy());
+//        billDTO.setDateTime(bill.getDateTime());
         billDTO.setDate(bill.getDate());
+        billDTO.setTime(bill.getTime());;
+        billDTO.setShiftTime(bill.getShiftTime());
         return billDTO;
+    }
+
+    private Bill mapToEntity(final BillDTO billDTO, final Bill bill) {
+        bill.setId(billDTO.getId());
+        bill.setUuid(billDTO.getUuid());
+        bill.setName(billDTO.getName());
+        bill.setEmail(billDTO.getEmail());
+        bill.setPhoneNumber(billDTO.getPhoneNumber());
+        bill.setPaymentMethod(billDTO.getPaymentMethod());
+        bill.setTotal(billDTO.getTotal());
+        bill.setProductDetails(billDTO.getProductDetails());
+        bill.setCreateBy(billDTO.getCreateBy());
+//        bill.setDateTime(billDTO.getDateTime());
+        bill.setDate(billDTO.getDate());
+        bill.setTime(billDTO.getTime());
+        bill.setShiftTime(billDTO.getShiftTime());
+        return bill;
     }
 }

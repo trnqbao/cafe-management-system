@@ -9,6 +9,7 @@ import { ManageUserComponent } from './manage-user/manage-user.component';
 import { ManageCustomerComponent } from './manage-customer/manage-customer.component';
 import { ManageFinancialComponent } from './manage-financial/manage-financial.component';
 import { ManageForecastComponent } from './manage-forecast/manage-forecast.component';
+import { ManageDailyRevenueByStaffComponent } from './manage-daily-revenue-by-staff/manage-daily-revenue-by-staff.component';
 
 
 export const MaterialRoutes: Routes = [
@@ -81,6 +82,15 @@ export const MaterialRoutes: Routes = [
         canActivate: [RouteGuardService],
         data: {
             expectedRole: ['ADMIN']
+        }
+    },
+
+    {
+        path: 'dailyRevenue',
+        component: ManageDailyRevenueByStaffComponent,
+        canActivate: [RouteGuardService],
+        data: {
+            expectedRole: ['USER']
         }
     }
 

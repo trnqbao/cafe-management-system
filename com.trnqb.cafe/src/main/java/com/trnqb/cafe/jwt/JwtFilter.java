@@ -25,7 +25,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
     private final CustomerUserDetailsService customerUserDetailsService;
-
     Claims claims = null;
     private String email = null;
 
@@ -63,6 +62,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     public boolean isAdmin() {
         return "ADMIN".equalsIgnoreCase((String) claims.get("role"));
+    }
+
+    public boolean isManager() {
+        return "MANAGER".equalsIgnoreCase((String) claims.get("role"));
     }
 
     public boolean isUser() {

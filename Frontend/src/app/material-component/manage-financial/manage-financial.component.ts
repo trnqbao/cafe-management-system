@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RevenueService } from 'src/app/services/revenue.service';
-import { Chart, registerables } from 'chart.js'
+import { Chart, registerables } from 'chart.js';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { formatDate } from '@angular/common';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { DailyRevenueComponent } from '../dialog/daily-revenue/daily-revenue.com
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
+import { BillService } from 'src/app/services/bill.service';
 
 @Component({
 	selector: 'app-manage-financial',
@@ -17,9 +18,10 @@ import { MatTableDataSource } from '@angular/material/table';
 export class ManageFinancialComponent implements OnInit {
 	selectedDate: Date = new Date();
 	dailyRevenue: number = 0;
-
 	weeklyRevenueData: any[] = [];
+	orderTimeData: any[] = [];
 	monthlyRevenue: number = 0;
+	last2weeksOrdersData: any[] = [];
 	responseMessage: any;
 	topDrinks: any[] = [];
 	dataSource: any;
@@ -28,6 +30,7 @@ export class ManageFinancialComponent implements OnInit {
 	constructor(
 		private ngxService: NgxUiLoaderService,
 		private revenueService: RevenueService,
+		private billService: BillService,
 		private dialog: MatDialog,
 		private snackbarService: SnackbarService,
 		private router: Router
@@ -40,14 +43,9 @@ export class ManageFinancialComponent implements OnInit {
 	}
 
 	loadRevenueData() {
-		// const formatedDate = this.selectedDate.toISOString().split('T')[0];
-		// const selectedMonth = new Date().getMonth() + 1;
-		// const selectedYear = new Date().getFullYear();
-
 		this.revenueService.getDailyRevenue().subscribe((res: any) => {
 			this.dailyRevenue = this.getVND(res.revenue);
 		});
-
 
 		this.revenueService.getMonthlyRevenue().subscribe((res: any) => {
 			this.monthlyRevenue = this.getVND(res.revenue);
@@ -55,52 +53,108 @@ export class ManageFinancialComponent implements OnInit {
 
 		this.revenueService.getWeeklyRevenue().subscribe((res: any) => {
 			this.weeklyRevenueData = res;
-			this.loadCharts();
-		})
+			this.createWeeklyRevenueChart();
+			this.billService.getOrderTimeLast7Days().subscribe((res: any) => {
+				this.orderTimeData = res;
+				this.createOrderTimeChart();
+			});
+		});
 
-	}
+		
 
-	loadCharts() {
-		this.createWeeklyRevenueChart();
-		this.createOrderTimeChart();
-		// this.createOrderedFrequency();
-		this.loadTopOrderedDrinks();
-		// this.createOrderedFrequency2();
-	}
-
-	loadTopOrderedDrinks() {
-		this.revenueService.getProductFrequencyLast7Days().subscribe((res: any) => {
-	
+		this.revenueService.getTopDrinksLast7Days().subscribe((res: any) => {
 			this.topDrinks = res;
-
-			
 		})
+
+		this.billService.getTotalOrdersLast2Weeks().subscribe((res: any) => {
+			this.last2weeksOrdersData = res;
+			this.createOrderedFrequency();
+		});
 	}
+
 	createOrderedFrequency() {
 		const ctx = document.getElementById('chart1') as HTMLCanvasElement;
+
+		const middleIndex = Math.floor(this.last2weeksOrdersData.length / 2);
+		const firstHalf = this.last2weeksOrdersData.slice(0, middleIndex);
+		const secondHalf = this.last2weeksOrdersData.slice(middleIndex);
+
+		const firstHalfDates = firstHalf.map(item => item.date);
+		const firstHalfTotals = firstHalf.map(item => item.total);
+		const secondHalfDates = secondHalf.map(item => item.date);
+		const secondHalfTotals = secondHalf.map(item => item.total);
+
+		const min = Math.min(...firstHalfTotals, ...secondHalfTotals);
+		const max = Math.max(...firstHalfTotals, ...secondHalfTotals);
+
+		
+		const dateObject1 = formatDate(new Date(firstHalfDates[0]), 'EEE - dd/MM', 'en-US');
+		const dateObject2 = formatDate(new Date(secondHalfDates[0]), 'EEE - dd/MM', 'en-US');
+		
 
 		const myChart = new Chart(ctx, {
 			type: 'line',
 			data: {
-				labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+				labels: ['', '', '', '', '', '', ''],
 				datasets: [{
-					label: 'Dataset 1',
-					data: [12, 19, 3, 5, 2, 3, 9],
+					label: 'This week',
+					data: secondHalfTotals,
 					borderColor: 'rgb(255, 99, 132)',
 					backgroundColor: 'rgba(255, 99, 132, 0.5)',
-					yAxisID: 'y'
+					spanGaps: true,
+					fill: false,
+	
 				},
 				{
-					label: 'Dataset 2',
-					data: [3, 2, 10, 4, 8, 6, 7],
-					borderColor: 'rgb(54, 162, 235)',
+					label: 'Last week',
+					data: firstHalfTotals,
+					borderColor: 'rgba(100, 193, 255, 0.6)',
 					backgroundColor: 'rgba(54, 162, 235, 0.5)',
-					yAxisID: 'y1'
+					spanGaps: true,
+					fill: false,
+
 				}
 				]
 			},
 			options: {
-
+				plugins: {
+					legend: {
+						display: true,
+						position: 'bottom'
+					}, 
+					title: {
+						display: true,
+						text: `Total daily orders`,
+						font: {
+							size: 16
+						}
+					},
+					subtitle: {
+						display: true,
+						text: 'This week from ' + dateObject2 + ' & Last week from ' + dateObject1,
+						color: 'blue',
+						font: {
+							size: 12,
+							family: 'tahoma',
+							weight: 'normal',
+							style: 'italic'
+						},
+						padding: {
+							bottom: 10
+						}
+					}, 
+				},
+				scales: {
+					y: {
+						beginAtZero: true,
+						max: max,
+						min: min,
+						title: {
+							display: true,
+							text: 'Total Orders Per Day'
+						  }
+					  }
+				}
 			}
 		});
 	}
@@ -177,7 +231,10 @@ export class ManageFinancialComponent implements OnInit {
 					},
 					title: {
 						display: true,
-						text: `Weekly Revenue (Total: ${this.getVND(weeklyRevenue.revenue)}  -  Avarage: ${this.getVND(weeklyRevenue.avg_revenue)}/day)`
+						text: `Weekly Revenue (Total: ${this.getVND(weeklyRevenue.revenue)}  -  Avarage: ${this.getVND(weeklyRevenue.avg_revenue)}/day)`,
+						font: {
+							size: 16
+						}
 					},
 					subtitle: {
 						display: true,
@@ -222,17 +279,12 @@ export class ManageFinancialComponent implements OnInit {
 			console.error('Canvas element not found');
 			return;
 		}
-		const orderData = [
-			{ label: 'Morning', value: 123 },
-			{ label: 'Afternoon', value: 155 },
-			{ label: 'Evening', value: 300 }
-		];
 
-		const totalOrders = orderData.reduce((acc, item) => acc + item.value, 0);
-		// Calculate the percentage for each time slot
-		const orderPercentages = orderData.map(item => {
-			const percentage = (item.value / totalOrders) * 100;
-			return `${item.label} (${percentage.toFixed(2)}%)`;
+		const orderData = this.orderTimeData.map(item => item.orders);
+		const totalOrder = this.orderTimeData.reduce((acc, item) => acc + item.orders, 0);
+		const orderPercentages = this.orderTimeData.map(item => {
+			const percentage = (item.orders / totalOrder) * 100;
+			return `${item.shift} (${percentage.toFixed(2)}%)`;
 		});
 
 		const myChart = new Chart(ctx, {
@@ -241,7 +293,7 @@ export class ManageFinancialComponent implements OnInit {
 				labels: orderPercentages,
 				datasets: [{
 					label: 'Order Time',
-					data: orderData.map(item => item.value),
+					data: orderData,
 					backgroundColor: [
 						'#D1D3E2',
 						'#8593ED',
@@ -288,6 +340,17 @@ export class ManageFinancialComponent implements OnInit {
 		return data.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 	}
 
+	handleViewAction() {
+		
+		const dialogRef = this.dialog.open(DailyRevenueComponent, {
+		  width: '100%',
+		  panelClass: 'full-screen-modal' // Optional: for full-screen modal
+		});
+	  
+		dialogRef.afterClosed().subscribe(result => {
+		  // Handle dialog closure
+		});
+	}
 	// handleViewAction(value: any) {
 	// 	const dialogConfig = new MatTableDataSource();
 	// 	dialogConfig.data = {

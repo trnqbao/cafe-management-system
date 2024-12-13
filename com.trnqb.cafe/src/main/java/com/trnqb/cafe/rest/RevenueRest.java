@@ -1,12 +1,10 @@
 package com.trnqb.cafe.rest;
 
-import com.trnqb.cafe.dto.ProductCount;
 import com.trnqb.cafe.dto.RevenueDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +13,9 @@ import java.util.Map;
 public interface RevenueRest {
     @GetMapping(path = "/get")
     ResponseEntity<List<RevenueDTO>> getRevenues();
+
+    @GetMapping(path = "/getDailyProducts")
+    ResponseEntity<List<Map<String, Object>>> getDailyProducts(@RequestParam(required = false) LocalDate date);
 
     @GetMapping(path = "/getDailyRevenue")
     ResponseEntity<Map<String, Object>> getDailyRevenue(@RequestParam(required = false) LocalDate date);
@@ -31,11 +32,7 @@ public interface RevenueRest {
     @GetMapping(path = "/getProductFrequencyLast7Days")
     ResponseEntity<List<Map<String, Object>>> getProductFrequencyLast7Days();
 
-
     @PostMapping(path = "/add")
     ResponseEntity<String> addRevenue(@RequestBody Map<String, String> requestMap);
 
-
-//    @PostMapping(path = "/update")
-//    ResponseEntity<String> updateRevenue(@RequestBody Map<String, String> requestMap);
 }
